@@ -18,14 +18,14 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 
-vector<complex_num> Radix2FFT(vector<complex_num> &P){
+vector<complex_num> Radix2FFT(vector<num> &P){
     size_t n = P.size();
     if (n == 1){
-        return vector<complex_num>{P[0]};
+        return vector<complex_num>{complex_num(P[0], 0)};
     }
 
-    vector<complex_num> U(n/2);
-    vector<complex_num> V(n/2);
+    vector<num> U(n/2);
+    vector<num> V(n/2);
 
     for (size_t j = 0; j < n/2; j++){
         U[j] = P[2*j];
@@ -49,10 +49,10 @@ vector<complex_num> Radix2FFT(vector<complex_num> &P){
     return P_star;
 }
 
-vector<complex_num> InverseRadix2FFT(vector<complex_num> &P_star){
+vector<num> InverseRadix2FFT(vector<complex_num> &P_star){
     size_t n = P_star.size();
     if (n == 1){
-        return vector<complex_num>{P_star[0]};
+        return vector<num>{P_star[0].real()};
     }
 
     vector<complex_num> U_star(n/2);
@@ -63,17 +63,17 @@ vector<complex_num> InverseRadix2FFT(vector<complex_num> &P_star){
         V_star[j] = P_star[2*j + 1];
     }
     
-    vector<complex_num> U = InverseRadix2FFT(U_star);
-    vector<complex_num> V = InverseRadix2FFT(V_star);
+    vector<num> U = InverseRadix2FFT(U_star);
+    vector<num> V = InverseRadix2FFT(V_star);
 
     complex_num omega_n(cos(2*M_PI/n), -sin(2*M_PI/n));
     complex_num omega(1, 0);
 
-    vector<complex_num> P(n);
+    vector<num> P(n);
 
     for (size_t j=0; j < n/2; j++){
-        P[j] = (U[j] + omega*V[j])/complex(num(2), num(0));
-        P[j + n/2] = (U[j] - omega*V[j])/complex(num(2), num(0));
+        P[j] = (U[j] + (omega*V[j]).real())/2;
+        P[j + n/2] = (U[j] - (omega*V[j]).real())/2;
         omega *= omega_n;
     }
 
@@ -82,13 +82,13 @@ vector<complex_num> InverseRadix2FFT(vector<complex_num> &P_star){
 
 
 int main(){
-    vector<complex_num> P = {complex_num(2, 0), complex_num(1, 0), complex_num(3, 0), complex_num(7, 0)};
+    vector<num> P = {0, 1, 0, 3, 0, 1, 0, 0};
     vector<complex_num> P_star = Radix2FFT(P);
     cout << "P star:" << endl;
     for (int i = 0; i < P_star.size(); i++){
         cout << P_star[i] << endl;
     }
-    vector<complex_num> P2 = InverseRadix2FFT(P_star);
+    vector<num> P2 = InverseRadix2FFT(P_star);
     cout << "P2:" << endl;
     for (int i = 0; i < P2.size(); i++){
         cout << P2[i] << endl;

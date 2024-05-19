@@ -1,10 +1,13 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <climits>
 #include <thread>
 #include <numeric>
 #include <iterator>
 // #include <optional>
 #include <vector>
+#include <string>
 #include <complex> // to use complex numbers
 #include <cmath>
 
@@ -128,52 +131,102 @@ void PRT2(std::vector<std::vector<complex_num>> P, string a = ""){
     cout<<endl;
 }
 
-vector<complex_num> GeneralFFT(vector<complex_num> &P){
+vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f = true){
     size_t n = P.size();
     if (n == 1){
         return vector<complex_num>{P[0]};
     }
     int p, q;
     std::tie(p, q) = Decompose(n);
-    PRT1(P, "P");
+    if(f == true){
+        PRT1(P, "P");
+    }
+    
     if(p == 1){
         return StandardFFT(P);
     }
     std::vector<std::vector<complex_num>> A(p, std::vector<complex_num>(q));
     A = PackFFT(P, p, q);
-    PRT2(A, "A");
-
+    
+    if(f == true){
+        PRT2(A, "A");
+    }
 
     std::vector<std::vector<complex_num>> B(p, std::vector<complex_num>(q));
     for(int k = 0; k < p; k++){
-        B[k] = GeneralFFT(A[k]);
+        B[k] = GeneralFFT(A[k], false);
     }
-    PRT2(B, "B");
+    if(f == true){
+        PRT2(B, "B");
+    }
+    
 
     std::vector<std::vector<complex_num>> C(p, std::vector<complex_num>(q));
     C = TwistFFT(B);
-    PRT2(C, "C");
+    if(f == true){
+        PRT2(C, "C");
+    }
+    
     std::vector<std::vector<complex_num>> D(q, std::vector<complex_num>(p));
     D = TransposeFFT(C);
-    PRT2(D, "D");
+    if(f == true){
+        PRT2(D, "D");
+    }
+    
     std::vector<std::vector<complex_num>> E(q, std::vector<complex_num>(p));
     for(int k = 0; k < q; k++){
-        E[k] = GeneralFFT(D[k]);
+        E[k] = GeneralFFT(D[k], false);
     }
-    PRT2(E, "E");
+    if(f == true){
+        PRT2(E, "E");
+    }
+    
     std::vector<std::vector<complex_num>> F(q, std::vector<complex_num>(p));
     F = TransposeFFT(E);
-    PRT2(F, "F");
+    if(f == true){
+        PRT2(F, "F");
+    }
+    
     vector<complex_num> G(n);
     G = UnPackFFT(F, p, q);
-    PRT1(G, "G");
+    if(f == true){
+        PRT1(G, "G");
+    }
+    
     return G;
 }
 
-
+vector<complex_num> Read_CSV(string file_path){
+    std::ifstream file(file_path);
+    std::string line;
+    std::vector<complex_num> column_data;
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file");
+    }
+    long double a = 0.0;
+    complex_num omega;
+    while (std::getline(file, line)) {
+        // Convert each line (string) to double and store in the vector
+        omega = {std::stold(line), a};
+        column_data.push_back(omega);
+    }
+    file.close();
+    return column_data;
+}
 
 int main(){
-    vector<complex_num> P(15, complex_num(1, 0));
-    vector<complex_num> P_star = GeneralFFT(P);
+    // This just generates a vector of length 15 of (1, 0)
+    // vector<complex_num> P(15, complex_num(1, 0));
+
+    vector<complex_num> P = Read_CSV("Weather_data.csv");
+
+    vector<complex_num> P_star = GeneralFFT(P, false);
+
+    
+    size_t t = P_star.size();
+    for(int i = 0; i < t; i++){
+        cout<<P_star[i]<<" ";
+    }
+    cout<<endl<<t;
     return 0;
 }

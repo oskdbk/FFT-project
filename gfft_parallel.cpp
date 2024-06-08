@@ -9,24 +9,8 @@ typedef long double num;
 typedef std::complex<num> complex_num;
 using namespace std;
 
-vector<complex_num> FFT(vector<complex_num> &P, int p, int q){
-    // input: matrix P of dimensions p x q
-    // in all columns of P, replace the column by its FFT
-    
-    int n = P.size();
-    vector<complex_num> P1(n);
-    for(int col = 0; col < q; col++){
-        vector<complex_num> A(p);
-        for(int i = 0; i < p; i++){
-            A[i] = P[i * q + col];
-        }
-        A = GeneralFFT(A);
-        for(int i = 0; i < p; i++){
-            P1[i * q + col] = A[i];
-        }
-    }
-    return P1;
-}
+
+// ------------------parallel versions----------------- //
 
 void FFTThread(vector<complex_num> &P, int thread_id, int num_threads, int p, int q){
     // input: matrix P of dimensions p x q
@@ -45,25 +29,7 @@ void FFTThread(vector<complex_num> &P, int thread_id, int num_threads, int p, in
     }
 }
 
-vector<complex_num> Twiddle(vector<complex_num> &P, int p, int q){
-    // input: matrix P of dimensions p x q
-    // for all elements of P, multiply the element by the twiddle factor
-    
-    int n = P.size();
-    vector<complex_num> P1(n);
-    std::complex<long double> omega;
-    long double angle;
-    for(int i = 0; i < n; i++){ // i is the raw index of the element
-        int row = i / q; // row index of the element
-        int col = i % q; // column index of the element
-        angle = 2 * M_PI * row * col / n;
-        omega = std::complex<long double>(std::cos(angle), -std::sin(angle));
-        P1[i] = P[i] * omega;
-        // if(i<20)
-        //     cout << P[i] << " * " << omega << " = " << P1[i] << endl;
-    }
-    return P1;
-}
+
 
 
 void TwiddleThread(vector<complex_num> &P, int thread_id, int num_threads, int p, int q){
@@ -89,17 +55,6 @@ void TwiddleThread(vector<complex_num> &P, int thread_id, int num_threads, int p
         // }
     }
 }
-void Transpose(vector<complex_num> &P, vector<complex_num> &Q, int p, int q){
-    // transpose the pxq matrix P into the qxp matrix Q
-    int n = P.size();
-    for(int i = 0; i < n; i++){
-        int row_Q = i / p;
-        int col_Q = i % p;
-        int row = col_Q;
-        int col = row_Q;
-        Q[row_Q * p + col_Q] = P[row * q + col];
-    }
-}
 
 
 void TransposeThread(vector<complex_num> &P, vector<complex_num> &Q, int thread_id, int num_threads, int p, int q){
@@ -117,26 +72,81 @@ void TransposeThread(vector<complex_num> &P, vector<complex_num> &Q, int thread_
         Q[row_Q * p + col_Q] = P[row * q + col];
     }   
 }
-vector<complex_num> FFT_Parallel(vector<complex_num> &P, int num_threads = 1){
+
+// --------------------------------------------------------------------- //
+
+// ------------------sequential versions for debugging----------------- //
+vector<complex_num> FFT(vector<complex_num> &P, int p, int q){
+    // input: matrix P of dimensions p x q
+    // in all columns of P, replace the column by its FFT
+    
+    int n = P.size();
+    vector<complex_num> P1(n);
+    for(int col = 0; col < q; col++){
+        vector<complex_num> A(p);
+        for(int i = 0; i < p; i++){
+            A[i] = P[i * q + col];
+        }
+        A = GeneralFFT(A);
+        for(int i = 0; i < p; i++){
+            P1[i * q + col] = A[i];
+        }
+    }
+    return P1;
+}
+
+void Transpose(vector<complex_num> &P, vector<complex_num> &Q, int p, int q){
+    // transpose the pxq matrix P into the qxp matrix Q
+    int n = P.size();
+    for(int i = 0; i < n; i++){
+        int row_Q = i / p;
+        int col_Q = i % p;
+        int row = col_Q;
+        int col = row_Q;
+        Q[row_Q * p + col_Q] = P[row * q + col];
+    }
+}
+
+vector<complex_num> Twiddle(vector<complex_num> &P, int p, int q){
+    // input: matrix P of dimensions p x q
+    // for all elements of P, multiply the element by the twiddle factor
+    
+    int n = P.size();
+    vector<complex_num> P1(n);
+    std::complex<long double> omega;
+    long double angle;
+    for(int i = 0; i < n; i++){ // i is the raw index of the element
+        int row = i / q; // row index of the element
+        int col = i % q; // column index of the element
+        angle = 2 * M_PI * row * col / n;
+        omega = std::complex<long double>(std::cos(angle), -std::sin(angle));
+        P1[i] = P[i] * omega;
+        // if(i<20)
+        //     cout << P[i] << " * " << omega << " = " << P1[i] << endl;
+    }
+    return P1;
+}
+
+// --------------------------------------------------------------------- //
+
+
+
+
+vector<complex_num> FFT_Parallel(vector<complex_num> P, int num_threads = 1){
+    // compute the FFT of the vector P in parallel with num_threads threads
     int n = P.size();
     while(n % num_threads != 0){
-        num_threads--;
+        num_threads--; // make sure n is divisible by num_threads
     }
     int p = n / num_threads; // number of rows we divide P into
     int q = num_threads; // number of columns = number of threads
 
+    // TODO: different decomposition of P into p x q also possible
+    // doesn't have to be num_threads columns
+
     // see P as a matrix of dimensions p x q
 
-
-
-
     // do FFT on each column of the matrix P
-
-    // for comparison:
-    vector<complex_num> P1(n);
-    P1 = FFT(P, p, q);
-
-    // parallel version
     std::vector<std::thread> workers(num_threads - 1);
     for (size_t i = 0; i < num_threads - 1; ++i) {
         workers[i] = std::thread(&FFTThread, std::ref(P), i, num_threads, p, q);
@@ -145,17 +155,6 @@ vector<complex_num> FFT_Parallel(vector<complex_num> &P, int num_threads = 1){
     for (size_t i = 0; i < num_threads - 1; ++i) {
         workers[i].join();
     }
-
-    // check if P is correct
-    for(int i = 0; i < n; i++){
-        if(norm(P[i] - P1[i]) > 1e-6){
-            cout << "FFT1 is wrong at index " << i << endl;
-            cout << P[i] << " != " << P1[i] << endl;
-            break;
-        }
-    }
-
-    // PRT1(P, "After FFT parallel");
     
     // transpose the matrix P
     vector<complex_num> Q(n);
@@ -168,26 +167,7 @@ vector<complex_num> FFT_Parallel(vector<complex_num> &P, int num_threads = 1){
         workers1[i].join();
     }
 
-    // PRT1(Q, "After FFT and transpose parallel");
-
-    // check if Q is correct
-    vector<complex_num> Q1(n);
-
-    Transpose(P, Q1, p, q);
-
-    for(int i = 0; i < n; i++){
-        if(norm(Q[i] - Q1[i]) > 1e-6){
-            cout << "Transpose is wrong at index " << i << endl;
-            cout << Q[i] << " != " << Q1[i] << endl;
-            break;
-        }
-    }
-
-    // Q has dimensions q x p
-
-    vector<complex_num> Q2 = Twiddle(Q, q, p);
-
-    // do twiddle factor multiplication on transposed matrix Q
+    // do twiddle factor multiplication on transposed matrix Q (Q is now a q x p matrix)
     std::vector<std::thread> workers2(num_threads - 1);
     for (size_t i = 0; i < num_threads - 1; ++i) {
         workers2[i] = std::thread(&TwiddleThread, std::ref(Q), i, num_threads, q, p);
@@ -197,21 +177,7 @@ vector<complex_num> FFT_Parallel(vector<complex_num> &P, int num_threads = 1){
         workers2[i].join();
     }
 
-    for(int i = 0; i < n; i++){
-        if(norm(Q[i] - Q2[i]) > 1e-6){
-            cout << "Twiddle is wrong at index " << i << endl;
-            cout << Q[i] << " != " << Q2[i] << endl;
-            break;
-        }
-    }
-
-    // PRT1(Q, "After Twiddle");
-
     // do FFT on each column of the matrix Q
-
-    // for comparison:
-    vector<complex_num> Q3(n);
-    Q3 = FFT(Q, q, p);
 
     // parallel version
     for (size_t i = 0; i < num_threads - 1; ++i) {
@@ -222,15 +188,6 @@ vector<complex_num> FFT_Parallel(vector<complex_num> &P, int num_threads = 1){
         workers[i].join();
     }
 
-    // check if Q is correct
-    for(int i = 0; i < n; i++){
-        if(norm(Q[i] - Q3[i]) > 1e-6){
-            cout << "FFT2 is wrong at index " << i << endl;
-            cout << Q[i] << " != " << Q3[i] << endl;
-            break;
-        }
-    }
-
     return Q;
 }
 
@@ -239,18 +196,52 @@ int main(){
     // vector<complex_num> P(15, complex_num(1, 0));
 
     vector<complex_num> P = Read_CSV("Weather_data.csv");
-    
+    int n = P.size();
     // copy P to Q
     vector<complex_num> Q(P.size());
     for(int i = 0; i < P.size(); i++){
         Q[i] = P[i];
     }
     // cout<<P.size()<<endl;
+    
+
+    // measure time of both versions
+
+    // sequential version
+    clock_t start, end;
+    double avg_time = 0;
+    for (int i = 0; i < 30; i++)
+    {
+        start = clock();
+        vector<complex_num> P_star = GeneralFFT(P, false);
+        end = clock();
+        avg_time += double(end - start);
+    }
+    avg_time /= 30;
+
+    cout << "Sequential version took " <<  avg_time << " ticks" << endl;
+
+    
+    
+    // try with different number of threads
+    for(int i = 1; i <= 30; i++){
+        if (n % i != 0){
+            continue;
+        }
+        double avg_time = 0;
+        for(int j = 0; j < 30; j++){
+            start = clock();
+            vector<complex_num> P_star_parallel = FFT_Parallel(Q, i);
+            end = clock();
+            avg_time += double(end - start);
+        }
+        avg_time /= 30;
+        cout << "Parallel version with " << i << " threads took " << avg_time << " ticks" << endl;
+    }
+
 
     vector<complex_num> P_star = GeneralFFT(P, false);
-
-    vector<complex_num> P_star_parallel = FFT_Parallel(Q, 10);
-
+    vector<complex_num> P_star_parallel = FFT_Parallel(Q, 20);
     size_t t = P_star.size();
     for(int i = 0; i < t; i++){
         if(norm(P_star[i] - P_star_parallel[i]) > 1e-6){
@@ -260,5 +251,13 @@ int main(){
         } 
     }
     cout << "Parallel is correct" << endl;
+
+    // Print results
+    cout << "Result:" << endl;
+    for (int i = 0; i < 9; i++)
+    {
+        cout << P_star[i] << " ";
+    }
+    cout << endl;
     return 0;
 }

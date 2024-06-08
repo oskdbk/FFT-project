@@ -227,19 +227,19 @@ vector<complex_num> Read_CSV(string file_path){
 }
 
 
-int main(){
-    // This just generates a vector of length 15 of (1, 0)
-    // vector<complex_num> P(15, complex_num(1, 0));
+// int main(){
+//     // This just generates a vector of length 15 of (1, 0)
+//     // vector<complex_num> P(15, complex_num(1, 0));
 
-    vector<complex_num> P = Read_CSV("Weather_data.csv");
+//     vector<complex_num> P = Read_CSV("Weather_data.csv");
 
-    vector<complex_num> P_star = GeneralFFT(P, false, true);
+//     vector<complex_num> P_star = GeneralFFT(P, false, true);
 
     
-    size_t t = P_star.size();
-    for(int i = 0; i < t; i++){
-        cout<<P_star[i]<<" ";
-    }
-    cout<<endl<<t;
-    return 0;
-}
+//     size_t t = P_star.size();
+//     for(int i = 0; i < t; i++){
+//         cout<<P_star[i]<<" ";
+//     }
+//     cout<<endl<<t;
+//     return 0;
+// }

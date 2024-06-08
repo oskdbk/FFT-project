@@ -53,7 +53,7 @@ void TwistFFT_inplace(std::vector<complex_num> &P, int p, int q){
 
 
 
-vector<complex_num> GeneralFFT_inplace(vector<complex_num> &P, bool f){
+vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f){
     int n = P.size();
     if (n == 1){
         return vector<complex_num>{P[0]};

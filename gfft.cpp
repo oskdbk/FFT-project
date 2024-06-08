@@ -67,7 +67,7 @@ vector<complex_num> UnPackFFT(std::vector<std::vector<complex_num>> &P, int p, i
 }
 
 
-vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f){
+vector<complex_num> GeneralFFT(vector<complex_num> P, bool f){
     size_t n = P.size();
     if (n == 1){
         return vector<complex_num>{P[0]};

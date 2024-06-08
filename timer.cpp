@@ -1,6 +1,7 @@
 #include "gfft.h"
 #include "gfft_parallel.h"
 #include "gfft_inplace.h"
+#include "utils.h"
 #include <vector>
 
 using namespace std;
@@ -28,14 +29,7 @@ int main(int argc, char* argv[]){
     int n = P.size();
     
     cout << "Running with n = " << n << ", max_threads = " << max_threads << " and iters = " << iters << endl;
-    
-
-    // copy P to Q
-    vector<complex_num> Q(P.size());
-    for(int i = 0; i < P.size(); i++){
-        Q[i] = P[i];
-    }
-    
+      
 
     // measure time of both versions
 
@@ -58,7 +52,7 @@ int main(int argc, char* argv[]){
     for (int i = 0; i < iters; i++)
     {
         start = clock();
-        vector<complex_num> P_star_inplace = GeneralFFT_inplace(Q, false);
+        vector<complex_num> P_star_inplace = GeneralFFT_inplace(P, false);
         end = clock();
         avg_time += double(end - start);
     }
@@ -71,7 +65,7 @@ int main(int argc, char* argv[]){
         avg_time = 0;
         for(int j = 0; j < iters; j++){
             start = clock();
-            vector<complex_num> P_star_parallel = GeneralFFT_Parallel(Q, i);
+            vector<complex_num> P_star_parallel = GeneralFFT_Parallel(P, i);
             end = clock();
             avg_time += double(end - start);
         }
@@ -81,8 +75,8 @@ int main(int argc, char* argv[]){
 
 
     vector<complex_num> P_star = GeneralFFT(P, false);
-    vector<complex_num> P_star_parallel = GeneralFFT_Parallel(Q, max_threads);
-    vector<complex_num> P_star_inplace = GeneralFFT_inplace(Q, false);
+    vector<complex_num> P_star_parallel = GeneralFFT_Parallel(P, max_threads);
+    vector<complex_num> P_star_inplace = GeneralFFT_inplace(P, false);
     size_t t = P_star.size();
     for(int i = 0; i < t; i++){
         if(norm(P_star[i] - P_star_parallel[i]) > 1e-6){

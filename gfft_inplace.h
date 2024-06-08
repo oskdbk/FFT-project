@@ -23,6 +23,6 @@ typedef std::vector<long double>::const_iterator NumIter;
 typedef std::complex<num> complex_num;
 using namespace std;
 
-vector<complex_num> GeneralFFT_inplace(vector<complex_num> &P, bool f = false);
+vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f = false);
 
 #endif // GFFT_INPLACE_H

@@ -68,9 +68,6 @@ int main(int argc, char* argv[]){
     
     // try with different number of threads
     for(int i = 1; i <= max_threads; i++){
-        if (n % i != 0){
-            continue;
-        }
         avg_time = 0;
         for(int j = 0; j < iters; j++){
             start = clock();

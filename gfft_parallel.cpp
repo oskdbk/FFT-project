@@ -135,14 +135,13 @@ vector<complex_num> Twiddle(vector<complex_num> &P, int p, int q){
 vector<complex_num> GeneralFFT_Parallel(vector<complex_num> P, int num_threads){
     // compute the FFT of the vector P in parallel with num_threads threads
     int n = P.size();
-    while(n % num_threads != 0){
-        num_threads--; // make sure n is divisible by num_threads
+    
+    // find p closest to sqrt(n) 
+    int p = sqrt(n);
+    while(n % p != 0){
+        p--;
     }
-    int p = n / num_threads; // number of rows we divide P into
-    int q = num_threads; // number of columns = number of threads
-
-    // TODO: different decomposition of P into p x q also possible
-    // doesn't have to be num_threads columns
+    int q = n / p;
 
     // see P as a matrix of dimensions p x q
 

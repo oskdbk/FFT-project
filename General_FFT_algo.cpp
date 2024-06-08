@@ -86,7 +86,7 @@ std::vector<std::vector<complex_num>> PackFFT(vector<complex_num> &P, int p, int
     std::vector<std::vector<complex_num>> A(p, std::vector<complex_num>(q));
     for(int j = 0; j < p; j++){
         for(int k = 0; k < q; k++){
-            A[j][k] = P[j * p + k];
+            A[j][k] = P[j * q + k];
         }
     }
     return A;
@@ -97,21 +97,19 @@ vector<complex_num> UnPackFFT(std::vector<std::vector<complex_num>> &P, int p, i
     std::vector<std::complex<long double>> output(p * q, 0);
     for(int j = 0; j < p; j++){
         for(int k = 0; k < q; k++){
-            output[j * p + k] = P[j][k];
+            output[j * q + k] = P[j][k];
         }
     }
     return output;
 }
 
 void PRT1(std::vector<std::complex<long double>> P, string a = ""){
-    cout<< a <<endl;
-    cout<<endl;
+    cout<< a << ":" << endl;
     int p;
     p = P.size();
     for(int i=0; i<p; i++){
         cout<<P[i]<<"  ";
     }
-    cout<<endl;
     cout<<endl;
 }
 
@@ -131,7 +129,7 @@ void PRT2(std::vector<std::vector<complex_num>> P, string a = ""){
     cout<<endl;
 }
 
-vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f = true){
+vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f = false){
     size_t n = P.size();
     if (n == 1){
         return vector<complex_num>{P[0]};
@@ -152,43 +150,57 @@ vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f = true){
         PRT2(A, "A");
     }
 
-    std::vector<std::vector<complex_num>> B(p, std::vector<complex_num>(q));
-    for(int k = 0; k < p; k++){
-        B[k] = GeneralFFT(A[k], false);
+
+    // transpose A
+    std::vector<std::vector<complex_num>> A1(q, std::vector<complex_num>(p));
+    A1 = TransposeFFT(A);
+    if(f == true){
+        PRT2(A1, "A1");
+    }
+
+    // FFT on each row of A1
+    std::vector<std::vector<complex_num>> B(q, std::vector<complex_num>(p));
+    for(int k = 0; k < q; k++){
+        B[k] = GeneralFFT(A1[k], false);
     }
     if(f == true){
         PRT2(B, "B");
     }
-    
-
-    std::vector<std::vector<complex_num>> C(p, std::vector<complex_num>(q));
+   
+    // Twiddle factor multiplication
+    std::vector<std::vector<complex_num>> C(q, std::vector<complex_num>(p));
     C = TwistFFT(B);
     if(f == true){
         PRT2(C, "C");
     }
     
-    std::vector<std::vector<complex_num>> D(q, std::vector<complex_num>(p));
+
+    // transpose C
+    std::vector<std::vector<complex_num>> D(p, std::vector<complex_num>(q));
     D = TransposeFFT(C);
     if(f == true){
         PRT2(D, "D");
     }
     
-    std::vector<std::vector<complex_num>> E(q, std::vector<complex_num>(p));
-    for(int k = 0; k < q; k++){
+    // FFT on each row of D
+    std::vector<std::vector<complex_num>> E(p, std::vector<complex_num>(q));
+    for(int k = 0; k < p; k++){
         E[k] = GeneralFFT(D[k], false);
     }
     if(f == true){
         PRT2(E, "E");
     }
     
+    // Transpose E
     std::vector<std::vector<complex_num>> F(q, std::vector<complex_num>(p));
     F = TransposeFFT(E);
     if(f == true){
         PRT2(F, "F");
     }
     
+    // Unpack F
     vector<complex_num> G(n);
-    G = UnPackFFT(F, p, q);
+    G = UnPackFFT(F, q, p);
     if(f == true){
         PRT1(G, "G");
     }
@@ -214,19 +226,20 @@ vector<complex_num> Read_CSV(string file_path){
     return column_data;
 }
 
-int main(){
-    // This just generates a vector of length 15 of (1, 0)
-    // vector<complex_num> P(15, complex_num(1, 0));
 
-    vector<complex_num> P = Read_CSV("Weather_data.csv");
+// int main(){
+//     // This just generates a vector of length 15 of (1, 0)
+//     // vector<complex_num> P(15, complex_num(1, 0));
 
-    vector<complex_num> P_star = GeneralFFT(P, false);
+//     vector<complex_num> P = Read_CSV("Weather_data.csv");
+
+//     vector<complex_num> P_star = GeneralFFT(P, false, true);
 
     
-    size_t t = P_star.size();
-    for(int i = 0; i < t; i++){
-        cout<<P_star[i]<<" ";
-    }
-    cout<<endl<<t;
-    return 0;
-}
+//     size_t t = P_star.size();
+//     for(int i = 0; i < t; i++){
+//         cout<<P_star[i]<<" ";
+//     }
+//     cout<<endl<<t;
+//     return 0;
+// }

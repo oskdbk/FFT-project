@@ -1,8 +1,4 @@
-all:
-	g++ FFT.cpp -o fft
+timer:
+	g++ gfft_parallel.cpp gfft.cpp gfft_inplace.cpp timer.cpp utils.cpp -o timer
 
-general:
-	g++ General_FFT_algo.cpp -o general
-
-parallel:
-	g++ gfft_parallel.cpp -o parallel
+	

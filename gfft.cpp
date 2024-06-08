@@ -1,56 +1,19 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <climits>
-#include <thread>
-#include <numeric>
-#include <iterator>
-// #include <optional>
-#include <vector>
-#include <string>
-#include <complex> // to use complex numbers
-#include <cmath>
+// fft_utils.cpp
+#include "gfft.h"  // Include the header file for function declarations and type definitions
+#include "utils.h" // Include the header file for utility functions
+#include <iostream>     // For std::cout, std::cin, etc.
+#include <fstream>      // For file handling
+#include <sstream>      // For string stream operations
+#include <cmath>        // For mathematical functions like std::cos, std::sin, etc.
+#include <string>       // For std::string
+#include <vector>       // For std::vector
+#include <complex>      // For std::complex
+#include <tuple>        // For std::tuple
 
-typedef long double num;
-typedef std::vector<long double>::const_iterator NumIter;
-
-typedef std::complex<num> complex_num;
-
-
+// Use the standard namespace
 using namespace std;
 
 //-----------------------------------------------------------------------------
-
-std::tuple<int, int> Decompose(int n){
-    int p, q;
-    for(int i = 2; i*i <= n; i++){
-        if (n % i == 0){
-            p = i;
-            q = n/i;
-            return std::make_tuple(p, q);
-        }
-    }
-    return std::make_tuple(1, n);
-}
-
-// for prime numbers, this primitive FFT, but can be changed to Rader's algorithm
-vector<complex_num> StandardFFT(vector<complex_num> &P){
-    size_t n = P.size();
-    std::vector<std::complex<long double>> output(n, 0);
-    std::complex<long double> omega;
-    for(int k = 0; k < n; k++){
-        omega = {1.0, 0.0};
-        std::complex<long double> sum(0, 0);
-        long double angle = 2 * M_PI * k / n;
-        std::complex<long double> omega_l(std::cos(angle), -std::sin(angle));
-        for(int l = 0; l < n; l++){
-            sum += P[l] * omega;
-            omega *= omega_l;
-        }
-        output[k] = sum;
-    }
-    return output;
-}
 
 std::vector<std::vector<complex_num>> TransposeFFT(std::vector<std::vector<complex_num>> &P){
     size_t p = P.size();
@@ -103,33 +66,8 @@ vector<complex_num> UnPackFFT(std::vector<std::vector<complex_num>> &P, int p, i
     return output;
 }
 
-void PRT1(std::vector<std::complex<long double>> P, string a = ""){
-    cout<< a << ":" << endl;
-    int p;
-    p = P.size();
-    for(int i=0; i<p; i++){
-        cout<<P[i]<<"  ";
-    }
-    cout<<endl;
-}
 
-void PRT2(std::vector<std::vector<complex_num>> P, string a = ""){
-    cout<< a <<endl;
-    cout<<endl;
-    int p,q;
-    p = P.size();
-    q = P[0].size();
-    for(int i=0; i<p; i++){
-        for(int j=0; j<q; j++){
-        cout<<P[i][j]<<" ";
-        }
-        cout<<endl;
-        cout<<endl;
-    }
-    cout<<endl;
-}
-
-vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f = false){
+vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f){
     size_t n = P.size();
     if (n == 1){
         return vector<complex_num>{P[0]};
@@ -208,38 +146,6 @@ vector<complex_num> GeneralFFT(vector<complex_num> &P, bool f = false){
     return G;
 }
 
-vector<complex_num> Read_CSV(string file_path){
-    std::ifstream file(file_path);
-    std::string line;
-    std::vector<complex_num> column_data;
-    if (!file.is_open()) {
-        throw std::runtime_error("Could not open file");
-    }
-    long double a = 0.0;
-    complex_num omega;
-    while (std::getline(file, line)) {
-        // Convert each line (string) to double and store in the vector
-        omega = {std::stold(line), a};
-        column_data.push_back(omega);
-    }
-    file.close();
-    return column_data;
-}
 
 
-// int main(){
-//     // This just generates a vector of length 15 of (1, 0)
-//     // vector<complex_num> P(15, complex_num(1, 0));
 
-//     vector<complex_num> P = Read_CSV("Weather_data.csv");
-
-//     vector<complex_num> P_star = GeneralFFT(P, false, true);
-
-    
-//     size_t t = P_star.size();
-//     for(int i = 0; i < t; i++){
-//         cout<<P_star[i]<<" ";
-//     }
-//     cout<<endl<<t;
-//     return 0;
-// }

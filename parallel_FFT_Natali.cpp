@@ -108,13 +108,13 @@ vector<complex_num> CooleyTukey(vector<complex_num>& input, int N1, int N2) {
 vector<complex_num> FFT(vector<complex_num>& input) {
     // find good N1 and N2 to divide by
     int N = input.size();
-    if (N < 10){
+    if (N <= 2){
         return DFT(input);
     }
     double n = sqrt(N);
     for (int i = floor(sqrt(N)); i > 0; i--){
         if (N % i == 0){
-            return CooleyTukey(input, i, N%i);
+            return CooleyTukey(input, i, (int)(N/i));
         }
     }
 }

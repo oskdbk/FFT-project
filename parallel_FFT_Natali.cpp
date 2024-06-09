@@ -134,7 +134,7 @@ int main() {
     vector<complex_num> output1 = DFT(input1);
     printVector(output1);
     cout << endl;
-    vector<complex_num> output1ct = CooleyTukey(input1, 2, 2);
+    vector<complex_num> output1ct = FFT(input1);
     printVector(output1ct);
 
     // Test case 2: Another simple case
@@ -143,7 +143,7 @@ int main() {
     vector<complex_num> output2 = DFT(input2);
     printVector(output2);
     cout << endl;
-    vector<complex_num> output2ct = CooleyTukey(input2, 2, 2);
+    vector<complex_num> output2ct = FFT(input2);
     printVector(output2ct);
 
     // Test case 3: Sinusoidal input
@@ -152,7 +152,7 @@ int main() {
     vector<complex_num> output3 = DFT(input3);
     printVector(output3);
     cout << endl;
-    vector<complex_num> output3ct = CooleyTukey(input3, 2, 2);
+    vector<complex_num> output3ct = FFT(input3);
     printVector(output3ct);
 
     // Test case 4: FFT with Cooley-Tukey algorithm
@@ -161,7 +161,7 @@ int main() {
     vector<complex_num> output4 = DFT(input4);
     printVector(output4);
     cout << endl;
-    vector<complex_num> output4ct = CooleyTukey(input4, 2, 2);
+    vector<complex_num> output4ct = FFT(input4);
     printVector(output4ct);
 
     return 0;

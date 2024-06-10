@@ -13,6 +13,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
+using namespace std;
+
 typedef long double num;
 typedef std::complex<num> complex_num;
 
@@ -22,4 +24,20 @@ void PRT2(std::vector<std::vector<complex_num>> P, std::string a);
 std::tuple<int, int> Decompose(int n);
 std::vector<complex_num> StandardFFT(std::vector<complex_num> &P);
 std::vector<complex_num> DFT(std::vector<complex_num>x);
+bool is_same_vector(vector<complex_num> A, vector<complex_num> B, string a = "A", string b = "B", bool verbose = false);
+
+// Template function moved here
+template<typename F, typename... Args>
+double measure_time(F func, int iters, Args&&... args) {
+    clock_t start, end;
+    double avg_time = 0;
+    for (int i = 0; i < iters; i++) {
+        start = clock();
+        func(std::forward<Args>(args)...);
+        end = clock();
+        avg_time += double(end - start);
+    }
+    avg_time /= iters;
+    return avg_time / CLOCKS_PER_SEC;
+}
 #endif // UTILS_H

@@ -94,3 +94,23 @@ vector<complex_num> DFT(vector<complex_num>x) {
     
     return X;
 }
+
+bool is_same_vector(vector<complex_num> A, vector<complex_num> B, string a, string b, bool verbose){
+    size_t t = A.size();
+    if (t != B.size()){
+        if (verbose)
+            cout << a << " and " << b << " have different sizes" << endl;
+        return false;
+    }
+    for(int i = 0; i < t; i++){
+        if(norm(A[i] - B[i]) > 1e-6){
+            if (verbose)
+                cout << a << " and " << b << " are different at index" << i;
+                cout << "A[" << i << "] = " << A[i] << ", B[" << i << "] = " << B[i] << endl;
+            return false;
+        } 
+    }
+    if (verbose)
+        cout << a << " and " << b << " are the same" << endl;
+    return true;
+}

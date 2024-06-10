@@ -29,8 +29,51 @@ int main(int argc, char* argv[]){
     }
     int n = P.size();
     
-    cout << "Running with n = " << n << ", max_threads = " << max_threads << " and iters = " << iters << endl;
-      
+    //cout << "Running with n = " << n << ", max_threads = " << max_threads << " and iters = " << iters << endl;
+    
+
+    vector<int> lengths = {100, 1000, 10000, 25000, 50000, 100000};
+    vector<int> threads = {1, 2, 4, 8, 12, 16, 32};
+    vector<vector<double>> times;
+    vector<string> names;
+    for (int i = 0; i < lengths.size(); i++){
+        cout << "Running with n = " << lengths[i] << endl;
+        vector<complex_num> P(lengths[i], complex_num(1.0, 0.0));
+        vector<double> row;
+        row.push_back(measure_time(GeneralFFT, iters, P, false));
+        if (i == 0)
+            names.push_back("Sequential");
+        row.push_back(measure_time(GeneralFFT_inplace, iters, P, false));
+        if (i == 0)
+            names.push_back("Inplace");
+        for (int j = 0; j < threads.size(); j++){
+            double a = measure_time(GeneralFFT_Parallel, iters, P, threads[j]);
+            row.push_back(a);
+            if (i == 0)
+                names.push_back("Parallel_" + to_string(threads[j]));
+        }
+        row.push_back(measure_time(FFT, iters, P));
+        if (i == 0)
+            names.push_back("Natali");
+        times.push_back(row);
+    }
+
+
+    // print the table
+    cout << "Length\t";
+    for (int i = 0; i < names.size(); i++){
+        cout << names[i] << "\t";
+    }
+    cout << endl;
+    for (int i = 0; i < lengths.size(); i++){
+        cout << lengths[i] << "\t";
+        for (int j = 0; j < times[i].size(); j++){
+            cout << times[i][j] << "\t";
+        }
+        cout << endl;
+    }
+    return 0;
+
 
     // measure time of both versions
 
@@ -91,16 +134,9 @@ int main(int argc, char* argv[]){
     vector<complex_num> P_star_parallel = GeneralFFT_Parallel(P, max_threads);
     vector<complex_num> P_star_inplace = GeneralFFT_inplace(P, false);
     vector<complex_num> P_star_natali = FFT(P);
-    size_t t = P_star.size();
-    for(int i = 0; i < t; i++){
-        if(norm(P_star_natali[i] - P_star_parallel[i]) > 1e-6){
-            cout << "Parallel differs at index " << i << endl;
-            cout << P_star[i] << " != " << P_star_natali[i] << endl;
-            break;
-        } 
-    }
-    cout << "Parallel version is the same as sequential" << endl;
-
+    is_same_vector(P_star, P_star_parallel, "Sequential", "Parallel", true);
+    is_same_vector(P_star, P_star_inplace, "Sequential", "Inplace", true);
+    is_same_vector(P_star, P_star_natali, "Sequential", "Natali", true);
     return 0;
 }
 #endif

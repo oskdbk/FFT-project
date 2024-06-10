@@ -2,6 +2,7 @@
 #include "gfft_parallel.h"
 #include "gfft_inplace.h"
 #include "utils.h"
+#include "parallel_natali.h"
 #include <vector>
 
 using namespace std;
@@ -13,7 +14,7 @@ int main(int argc, char* argv[]){
     // vector<complex_num> P(15, complex_num(1, 0));
     vector<complex_num> P;
     int iters = 5;
-    int max_threads = 24;
+    int max_threads = 8;
     if (argc == 1){
         P = Read_CSV("Weather_data.csv");
     } else {
@@ -73,15 +74,28 @@ int main(int argc, char* argv[]){
         cout << "Parallel version with " << i << " threads took " << avg_time << " ticks" << endl;
     }
 
+    // Natali version
+    avg_time = 0;
+    for (int i = 0; i < iters; i++)
+    {
+        start = clock();
+        vector<complex_num> P_star_natali = FFT(P);
+        end = clock();
+        avg_time += double(end - start);
+    }
+    avg_time /= iters;
 
+    cout << "Natali version took " << avg_time << " ticks" << endl;
+    
     vector<complex_num> P_star = GeneralFFT(P, false);
     vector<complex_num> P_star_parallel = GeneralFFT_Parallel(P, max_threads);
     vector<complex_num> P_star_inplace = GeneralFFT_inplace(P, false);
+    vector<complex_num> P_star_natali = FFT(P);
     size_t t = P_star.size();
     for(int i = 0; i < t; i++){
-        if(norm(P_star[i] - P_star_parallel[i]) > 1e-6){
+        if(norm(P_star_natali[i] - P_star_parallel[i]) > 1e-6){
             cout << "Parallel differs at index " << i << endl;
-            cout << P_star[i] << " != " << P_star_parallel[i] << endl;
+            cout << P_star[i] << " != " << P_star_natali[i] << endl;
             break;
         } 
     }

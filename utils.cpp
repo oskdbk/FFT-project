@@ -76,3 +76,21 @@ vector<complex_num> StandardFFT(vector<complex_num> &P){
     }
     return output;
 }
+
+/*
+Basic DFT
+*/
+vector<complex_num> DFT(vector<complex_num>x) {
+    size_t N = x.size();
+    vector<complex_num> X = vector<complex_num>(N);
+    int k, n;
+    for(k = 0; k < N; k++) {
+        for(n = 0; n < N; n++) {
+            double angle = 2 * M_PI * n * k / N;
+            
+            X[k] += x[n] * complex_num(std::cos(angle), -std::sin(angle));
+        }
+    }
+    
+    return X;
+}

@@ -21,5 +21,5 @@ void PRT1(std::vector<std::complex<long double>> P, std::string a);
 void PRT2(std::vector<std::vector<complex_num>> P, std::string a);
 std::tuple<int, int> Decompose(int n);
 std::vector<complex_num> StandardFFT(std::vector<complex_num> &P);
-
+std::vector<complex_num> DFT(std::vector<complex_num>x);
 #endif // UTILS_H

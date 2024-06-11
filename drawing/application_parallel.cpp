@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <thread>
-#include "../gfft_parallel.h"
+#include "../general/gfft_parallel.h"
 
 using namespace cv;
 using namespace std;
@@ -164,9 +164,23 @@ void parallel_construct_vertices(const vector<complex_num>& points, double xmin,
     }
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    std::string filename;
+    bool usePoints = false;
+
+    // Parse command line arguments
+    if (argc < 2 || argc > 3) {
+        std::cerr << "Usage: " << argv[0] << " <filename> [-points]\n";
+        return 1;
+    } else {
+        filename = argv[1];
+        if (argc == 3 && std::string(argv[2]) == "-points") {
+            usePoints = true;
+        }
+    }
+
     // Load the image
-    Mat image = imread("pictures/gojo.png");
+    Mat image = imread("pictures/" + filename);
     if (image.empty()) {
         cout << "Could not open or find the image" << endl;
         return -1;
@@ -215,7 +229,13 @@ int main() {
     double scale_y = HEIGHT / (ymax - ymin);
     double scale = std::min(scale_x, scale_y);
 
-    sf::VertexArray curve(sf::LineStrip, points.size());
+    sf::VertexArray curve;
+
+    if (usePoints){
+        curve = sf::VertexArray(sf::Points, points.size());
+    } else {
+        curve = sf::VertexArray(sf::LineStrip, points.size());
+    }
     parallel_construct_vertices(points, xmin, ymin, scale, curve);
 
     // Rendering

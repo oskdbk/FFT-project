@@ -120,6 +120,7 @@ int main(int argc, char* argv[]) {
     float PI = 3.14159265358979323846f;
 
     auto contour = combine_contours(contours);
+    cout << "Number of points is: " << contour.size() << endl;
     // Calculate Fourier transform
     vector<complex_num> contour_complex_x = contour_to_complex_vector_x(contour);
     vector<complex_num> contour_complex_y = contour_to_complex_vector_y(contour);

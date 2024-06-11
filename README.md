@@ -3,7 +3,7 @@
 ## Image of PI
 Number of contours: 20.
 #### Initial image
-<img src="drawing/pictures/pi_try.png" alt="PI result" style="width:300px;height:200px;">
+<img src="drawing/pictures/pi_try.png" alt="PI result" style="height:200px;">
 
 Initial image of PI from Google.
 

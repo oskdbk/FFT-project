@@ -11,21 +11,6 @@ using namespace std;
 typedef double num;
 typedef std::complex<num> complex_num;
 
-
-vector<complex_num> DFT(vector<complex_num>&x) {
-    size_t N = x.size();
-    vector<complex_num> X = vector<complex_num>(N);
-    int k, n;
-    for(k = 0; k < N; k++) {
-        for(n = 0; n < N; n++) {
-            double angle = -2 * M_PI * n * k/ N;
-            X[k] += x[n] * polar(1.0, angle);
-        }
-    }
-    
-    return X;
-}
-
 vector<complex_num> contour_to_complex_vector(const std::vector<Point>& contour) {
     size_t N = contour.size();
     std::vector<complex_num> complex_vector(N);
@@ -133,17 +118,12 @@ int main() {
         //     curve.append(sf::Vertex(sf::Vector2f(x, y), sf::Color::Red));
         // }
 
-        // Calculate fourier coefficients
-        // vector<complex_num> fft = GeneralFFT_Parallel(contour_complex);
-        // Generate points
+        // Calculate fourier coefficients and generate points
         for (float t = 0; t < 2*M_PI; t += 2*M_PI/fft_x.size()) {
             double x = parametric(complex_num(WIDTH/2.0 + 100, 100), 0, t, fft_x).real();
             double y = parametric(complex_num(100.0, HEIGHT/2.0+100), M_PI/2, t, fft_y).imag();
             x = x/300;
             y = y/300;
-            //complex_num pnt = parametric(t, fft);
-            //float x = pnt.real()/20000000;  // Scale x
-            //float y = pnt.imag()/20000000;  // Scale y
             std::cout << x << "  " << y << std::endl;
             curve.append(sf::Vertex(sf::Vector2f(x, y), sf::Color::Red));
         }
@@ -174,16 +154,6 @@ int main() {
     view.setCenter(0.0f, 0.0f);
     view.setSize(WIDTH, HEIGHT); // flip the y axis
     window.setView(view);
-
-    // // Vertex array
-    // sf::VertexArray curve(sf::LineStrip);
-
-    // // Generate points
-    // for (float t = 0; t <= 2 * PI; t += 0.01f) {
-    //     float x = parametricX(t) * 200;  // Scale x
-    //     float y = parametricY(t) * 200;  // Scale y
-    //     curve.append(sf::Vertex(sf::Vector2f(x, y), sf::Color::Red));
-    // }
 
     while (window.isOpen()) {
         sf::Event event;

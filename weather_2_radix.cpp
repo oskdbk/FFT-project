@@ -1,7 +1,6 @@
 #include "utils.h"
-#include "gfft_parallel.h"
 #include <vector>
-#include "FFT.h"
+#include "radix/FFT.h"
 
 using namespace std;
 

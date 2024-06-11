@@ -23,8 +23,7 @@ void FFTThread(vector<complex_num> &P, int thread_id, int num_threads, int p, in
         for(int i = 0; i < p; i++){
             A[i] = P[i * q + col];
         }
-        // A = GeneralFFT_inplace(A, false);
-        A = DFT(A, inverse);
+        A = GeneralFFT_inplace(A, false, inverse);
         for(int i = 0; i < p; i++){
             P[i * q + col] = A[i];
         }
@@ -90,7 +89,7 @@ vector<complex_num> FFT(vector<complex_num> &P, int p, int q){
         for(int i = 0; i < p; i++){
             A[i] = P[i * q + col];
         }
-        A = GeneralFFT(A);
+        A = GeneralFFT_inplace(A);
         for(int i = 0; i < p; i++){
             P1[i * q + col] = A[i];
         }

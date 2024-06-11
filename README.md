@@ -1,4 +1,7 @@
 # Application
+## How to run
+You can compile the code for the non-parallel version by ```make drawing``` or just ```make``` and then run by ```./application``` from inside the ```drawing``` folder.
+You can compile the code for the parallel version by ```make parallel``` and then run by ```./application_parallel``` from inside the ```drawing``` folder.
 
 <div align="center">
   

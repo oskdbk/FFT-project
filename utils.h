@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <tuple>
+#include <algorithm>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -19,6 +20,8 @@ typedef double num;
 typedef std::complex<num> complex_num;
 
 std::vector<complex_num> Read_CSV(std::string file_path);
+void Write_CSV(const std::vector<complex_num>& data, const std::string& file_path);
+void Write_CSV_Columns(const std::vector<std::vector<complex_num>>& data, const std::vector<std::string>& headers, const std::string& file_path);
 void PRT1(std::vector<std::complex<double>> P, std::string a);
 void PRT2(std::vector<std::vector<complex_num>> P, std::string a);
 std::tuple<int, int> Decompose(int n);
@@ -40,4 +43,6 @@ double measure_time(F func, int iters, Args&&... args) {
     avg_time /= iters;
     return avg_time / CLOCKS_PER_SEC;
 }
+
+void keep_largest_n(std::vector<complex_num> &P, int n);
 #endif // UTILS_H

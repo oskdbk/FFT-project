@@ -5,7 +5,7 @@
 #include <complex>        // For std::complex
 
 // Define a complex number type alias for convenience
-using complex_num = std::complex<long double>;
+using complex_num = std::complex<double>;
 
 // Function declarations
 std::vector<complex_num> GeneralFFT_Parallel(std::vector<complex_num> P, int num_threads = 1);

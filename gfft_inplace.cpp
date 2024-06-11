@@ -13,7 +13,7 @@
 #include "gfft_inplace.h"
 #include "utils.h"
 
-typedef long double num;
+typedef double num;
 typedef std::complex<num> complex_num;
 
 
@@ -38,14 +38,14 @@ std::vector<complex_num> TransposeFFT_inplace(std::vector<complex_num> &P, int p
 
 void TwistFFT_inplace(std::vector<complex_num> &P, int p, int q){
     int n = p * q;
-    std::complex<long double> omega;
-    long double angle;
+    std::complex<double> omega;
+    double angle;
     std::vector<std::vector<complex_num>> Q(p, std::vector<complex_num>(q));
     for (int i = 0; i < p; ++i) {
         
         for (int j = 0; j < q; ++j) {
             angle = 2 * M_PI * i * j / n;
-            omega = std::complex<long double>(std::cos(angle), -std::sin(angle));
+            omega = std::complex<double>(std::cos(angle), -std::sin(angle));
             P[i * q + j] *= omega;
         }
     }

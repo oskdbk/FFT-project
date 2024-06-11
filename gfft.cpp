@@ -31,14 +31,14 @@ std::vector<std::vector<complex_num>> TwistFFT(std::vector<std::vector<complex_n
     size_t p = P.size();
     size_t q = P[0].size();
     size_t n = p * q;
-    std::complex<long double> omega;
-    long double angle;
+    std::complex<double> omega;
+    double angle;
     std::vector<std::vector<complex_num>> Q(p, std::vector<complex_num>(q));
     for (size_t i = 0; i < p; ++i) {
         
         for (size_t j = 0; j < q; ++j) {
             angle = 2 * M_PI * i * j / n;
-            std::complex<long double> omega(std::cos(angle), -std::sin(angle));
+            std::complex<double> omega(std::cos(angle), -std::sin(angle));
             Q[i][j] = P[i][j] * omega; 
         }
     }
@@ -57,7 +57,7 @@ std::vector<std::vector<complex_num>> PackFFT(vector<complex_num> &P, int p, int
 
 vector<complex_num> UnPackFFT(std::vector<std::vector<complex_num>> &P, int p, int q){
 
-    std::vector<std::complex<long double>> output(p * q, 0);
+    std::vector<std::complex<double>> output(p * q, 0);
     for(int j = 0; j < p; j++){
         for(int k = 0; k < q; k++){
             output[j * q + k] = P[j][k];

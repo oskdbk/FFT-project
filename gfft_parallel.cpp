@@ -37,8 +37,8 @@ void TwiddleThread(vector<complex_num> &P, int thread_id, int num_threads, int p
     // for all elements of P that are = thread_id mod num_threads,
     // multiply the element by the twiddle factor
     int n = P.size();
-    std::complex<long double> omega;
-    long double angle;
+    std::complex<double> omega;
+    double angle;
     for(int i = thread_id; i < n; i += num_threads){ // i is the raw index of the element
         
         int row = i / q; // row index of the element
@@ -47,8 +47,8 @@ void TwiddleThread(vector<complex_num> &P, int thread_id, int num_threads, int p
         //     cout<<i<<" ("<<row<<","<<col<<"): " << P[i];
         // }
         angle = 2 * M_PI * row * col / n;
-        omega = std::complex<long double>(std::cos(angle), -std::sin(angle));
-        complex<long double> temp = P[i] * omega;
+        omega = std::complex<double>(std::cos(angle), -std::sin(angle));
+        complex<double> temp = P[i] * omega;
         P[i] = temp;
         // if(i<20 && thread_id == 1){
         //     cout<<" * " << omega << " = "<< P[i]<< " ("<< temp<<")"<<endl;
@@ -113,13 +113,13 @@ vector<complex_num> Twiddle(vector<complex_num> &P, int p, int q){
     
     int n = P.size();
     vector<complex_num> P1(n);
-    std::complex<long double> omega;
-    long double angle;
+    std::complex<double> omega;
+    double angle;
     for(int i = 0; i < n; i++){ // i is the raw index of the element
         int row = i / q; // row index of the element
         int col = i % q; // column index of the element
         angle = 2 * M_PI * row * col / n;
-        omega = std::complex<long double>(std::cos(angle), -std::sin(angle));
+        omega = std::complex<double>(std::cos(angle), -std::sin(angle));
         P1[i] = P[i] * omega;
         // if(i<20)
         //     cout << P[i] << " * " << omega << " = " << P1[i] << endl;

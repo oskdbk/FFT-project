@@ -17,8 +17,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-typedef long double num;
-typedef std::vector<long double>::const_iterator NumIter;
+typedef double num;
+typedef std::vector<double>::const_iterator NumIter;
 
 typedef std::complex<num> complex_num;
 using namespace std;

@@ -8,7 +8,7 @@
 #include <complex>
 #include <tuple>
 
-typedef long double num;
+typedef double num;
 typedef std::complex<num> complex_num;
 
 // Function declarations

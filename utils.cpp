@@ -59,37 +59,46 @@ std::tuple<int, int> Decompose(int n){
 }
 
 // for prime numbers, this primitive FFT, but can be changed to Rader's algorithm
-vector<complex_num> StandardFFT(vector<complex_num> &P){
+vector<complex_num> StandardFFT(vector<complex_num> &P, bool inv){
+    double factor = -1.0;
+    double div = 1.0;
+    
     size_t n = P.size();
+    if(inv){
+        factor = 1.0;
+        div = static_cast<double>(n);
+    }
     std::vector<std::complex<double>> output(n, 0);
     std::complex<double> omega;
     for(int k = 0; k < n; k++){
         omega = {1.0, 0.0};
         std::complex<double> sum(0, 0);
         double angle = 2 * M_PI * k / n;
-        std::complex<double> omega_l(std::cos(angle), -std::sin(angle));
+        std::complex<double> omega_l(std::cos(angle), factor * std::sin(angle));
         for(int l = 0; l < n; l++){
             sum += P[l] * omega;
             omega *= omega_l;
         }
-        output[k] = sum;
+        output[k] = sum/div;
     }
     return output;
 }
 
+
 /*
 Basic DFT
 */
-vector<complex_num> DFT(vector<complex_num>x) {
+vector<complex_num> DFT(vector<complex_num>x, bool inverse) {
     size_t N = x.size();
     vector<complex_num> X = vector<complex_num>(N);
     int k, n;
     for(k = 0; k < N; k++) {
         for(n = 0; n < N; n++) {
             double angle = 2 * M_PI * n * k / N;
-            
+            if(inverse) angle = -angle;
             X[k] += x[n] * complex_num(std::cos(angle), -std::sin(angle));
         }
+        if(inverse) X[k] /= N;
     }
     
     return X;

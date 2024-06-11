@@ -11,7 +11,7 @@
 #include <complex> // to use complex numbers
 #include <cmath>
 #include "gfft_inplace.h"
-#include "utils.h"
+#include "../utils.h"
 
 typedef double num;
 typedef std::complex<num> complex_num;

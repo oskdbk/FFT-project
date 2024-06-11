@@ -8,7 +8,7 @@
 #include "gfft.h"
 #include "gfft_parallel.h"
 #include "gfft_inplace.h"
-#include "utils.h"
+#include "../utils.h"
 using namespace std;
 
 // ------------------parallel versions----------------- //

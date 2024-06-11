@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "gfft_parallel.h"
+#include "general/gfft_parallel.h"
 #include <vector>
 
 using namespace std;
@@ -19,7 +19,7 @@ int main(){
         primes.push_back(GeneralFFT_Parallel(Res_copy, 8, true));
         headers.push_back(to_string(keep));
     }
-    Write_CSV_Columns(primes, headers, "weather_cleaned_multiple.csv");
+    Write_CSV_Columns(primes, headers, "weather_data/weather_cleaned_multiple.csv");
 
     
 }

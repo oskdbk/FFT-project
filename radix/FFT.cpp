@@ -11,8 +11,9 @@ vector<complex_num> Radix2FFT(vector<complex_num> P){
         return vector<complex_num>{P[0]};
     }
     // pad to power of 2
-    while(log2(P.size()) > (int) log2(P.size()))
+    while(log2(P.size()) > (int) log2(P.size())){
         P.push_back(complex_num(0.0,0.0));
+    }
 
     int n = P.size();
     vector<complex_num> U(n/2);

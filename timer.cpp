@@ -1,8 +1,9 @@
-#include "gfft.h"
-#include "gfft_parallel.h"
-#include "gfft_inplace.h"
+#include "general/gfft.h"
+#include "general/gfft_parallel.h"
+#include "general/gfft_inplace.h"
 #include "utils.h"
-#include "parallel_natali.h"
+#include "radix/FFT.h"
+#include "radix/radix_parallel.h"
 #include <vector>
 
 using namespace std;
@@ -13,7 +14,7 @@ int main(int argc, char* argv[]){
     // This just generates a vector of length 15 of (1, 0)
     // vector<complex_num> P(15, complex_num(1, 0));
     vector<complex_num> P;
-    int iters = 5;
+    int iters = 25;
     int max_threads = 8;
     if (argc == 1){
         P = Read_CSV("Weather_data.csv");
@@ -36,6 +37,8 @@ int main(int argc, char* argv[]){
     vector<int> threads = {1, 2, 4, 8, 12, 16, 32};
     vector<vector<double>> times;
     vector<string> names;
+    vector<vector<double>> times_radix;
+    vector<string> names_radix;
     for (int i = 0; i < lengths.size(); i++){
         cout << "Running with n = " << lengths[i] << endl;
         vector<complex_num> P(lengths[i], complex_num(1.0, 0.0));
@@ -52,10 +55,20 @@ int main(int argc, char* argv[]){
             if (i == 0)
                 names.push_back("Parallel_" + to_string(threads[j]));
         }
-        row.push_back(measure_time(FFT, iters, P));
-        if (i == 0)
-            names.push_back("Natali");
         times.push_back(row);
+
+        row.clear();
+        row.push_back(measure_time(Radix2FFT, iters, P));
+        if (i == 0)
+            names_radix.push_back("Radix2");
+        
+        for (int j = 0; j < threads.size(); j++){
+            double a = measure_time(Radix2FFT_parallel, iters, P, threads[j], false);
+            row.push_back(a);
+            if (i == 0)
+                names_radix.push_back("Radix2_Parallel_" + to_string(threads[j]));
+        }
+        times_radix.push_back(row);
     }
 
 
@@ -72,71 +85,23 @@ int main(int argc, char* argv[]){
         }
         cout << endl;
     }
-    return 0;
 
 
-    // measure time of both versions
-
-    // sequential version
-    clock_t start, end;
-    double avg_time = 0;
-    for (int i = 0; i < iters; i++)
-    {
-        start = clock();
-        vector<complex_num> P_star = GeneralFFT(P, false);
-        end = clock();
-        avg_time += double(end - start);
+    // print the table for radix
+    cout << "Length\t";
+    for (int i = 0; i < names_radix.size(); i++){
+        cout << names_radix[i] << "\t";
     }
-    avg_time /= iters;
-
-    cout << "Sequential version took " <<  avg_time << " ticks" << endl;
-
-    // inplace version
-    avg_time = 0;
-    for (int i = 0; i < iters; i++)
-    {
-        start = clock();
-        vector<complex_num> P_star_inplace = GeneralFFT_inplace(P, false);
-        end = clock();
-        avg_time += double(end - start);
-    }
-    avg_time /= iters;
-
-    cout << "Inplace version took " << avg_time << " ticks" << endl;
-    
-    // try with different number of threads
-    for(int i = 1; i <= max_threads; i++){
-        avg_time = 0;
-        for(int j = 0; j < iters; j++){
-            start = clock();
-            vector<complex_num> P_star_parallel = GeneralFFT_Parallel(P, i);
-            end = clock();
-            avg_time += double(end - start);
+    cout << endl;
+    for (int i = 0; i < lengths.size(); i++){
+        cout << lengths[i] << "\t";
+        for (int j = 0; j < times_radix[i].size(); j++){
+            cout << times_radix[i][j] << "\t";
         }
-        avg_time /= iters;
-        cout << "Parallel version with " << i << " threads took " << avg_time << " ticks" << endl;
+        cout << endl;
     }
-
-    // Natali version
-    avg_time = 0;
-    for (int i = 0; i < iters; i++)
-    {
-        start = clock();
-        vector<complex_num> P_star_natali = FFT(P);
-        end = clock();
-        avg_time += double(end - start);
-    }
-    avg_time /= iters;
-
-    cout << "Natali version took " << avg_time << " ticks" << endl;
-    
-    vector<complex_num> P_star = GeneralFFT(P, false);
-    vector<complex_num> P_star_parallel = GeneralFFT_Parallel(P, max_threads);
-    vector<complex_num> P_star_inplace = GeneralFFT_inplace(P, false);
-    vector<complex_num> P_star_natali = FFT(P);
-    is_same_vector(P_star, P_star_parallel, "Sequential", "Parallel", true);
-    is_same_vector(P_star, P_star_inplace, "Sequential", "Inplace", true);
-    is_same_vector(P_star, P_star_natali, "Sequential", "Natali", true);
     return 0;
+
+
 }
 #endif

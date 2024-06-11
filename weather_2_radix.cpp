@@ -1,7 +1,6 @@
 #include "utils.h"
-#include "gfft_parallel.h"
 #include <vector>
-#include "FFT.h"
+#include "radix/FFT.h"
 
 using namespace std;
 
@@ -27,7 +26,7 @@ int main(){
         primes.push_back(prime);
         headers.push_back(to_string(keep));
     }
-    Write_CSV_Columns(primes, headers, "weather_cleaned_radix.csv");
+    Write_CSV_Columns(primes, headers, "weather_data/weather_cleaned_radix.csv");
 
     
 }

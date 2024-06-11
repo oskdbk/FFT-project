@@ -1,6 +1,6 @@
 // fft_utils.cpp
 #include "gfft.h"  // Include the header file for function declarations and type definitions
-#include "utils.h" // Include the header file for utility functions
+#include "../utils.h" // Include the header file for utility functions
 #include <iostream>     // For std::cout, std::cin, etc.
 #include <fstream>      // For file handling
 #include <sstream>      // For string stream operations

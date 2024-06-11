@@ -1,5 +1,5 @@
 #include <vector>
-#include "gfft_parallel.h"
+#include "general/gfft_parallel.h"
 #include "utils.h"
 
 using namespace std;

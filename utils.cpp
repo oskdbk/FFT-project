@@ -13,7 +13,7 @@ vector<complex_num> Read_CSV(string file_path){
     complex_num omega;
     while (std::getline(file, line)) {
         // Convert each line (string) to double and store in the vector
-        omega = {std::stold(line), a};
+        omega = {(double) std::stold(line), a};
         column_data.push_back(omega);
     }
     file.close();
@@ -63,7 +63,7 @@ void PRT1(std::vector<std::complex<double>> P, string a){
     cout<< a << ":" << endl;
     int p;
     p = P.size();
-    for(int i=0; i<10; i++){
+    for(int i=0; i<std::min(10, p); i++){
         cout<<P[i]<<"  ";
     }
     cout<<endl;
@@ -153,7 +153,7 @@ bool is_same_vector(vector<complex_num> A, vector<complex_num> B, string a, stri
     for(int i = 0; i < t; i++){
         if(norm(A[i] - B[i]) > 1e-6){
             if (verbose)
-                cout << a << " and " << b << " are different at index" << i;
+                cout << a << " and " << b << " are different at index " << i <<": ";
                 cout << "A[" << i << "] = " << A[i] << ", B[" << i << "] = " << B[i] << endl;
             return false;
         } 

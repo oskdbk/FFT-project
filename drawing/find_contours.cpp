@@ -75,40 +75,16 @@ vector<complex_num> contour_to_complex_vector_y(const std::vector<Point>& contou
 /*
     Parametric equation using fft
  */
-complex_num parametric(float t, vector<complex_num> &fft) {
-    complex_num res = 0;
+complex_num parametric(complex_num init_res, double rotation, float t, vector<complex_num> &fft) {
+    complex_num res = init_res;
     size_t N = fft.size();
-    // real
-    // complex_num a0 = fft[0]/complex_num(N, 0);
-    // vector<double> an(N-1);
-    // vector<double> bn(N-1);
 
-    // for (int i = 1; i < N; i++){
-    //     an[i-1] = -2*(fft[i]/complex_num(N, 0)).real();
-    //     bn[i-1] = -2*(fft[i]/complex_num(N, 0)).imag();
-    // }
-
-    // res += a0.real() / 2.0;
-
-    // for (int n = 1; n < N; n++){
-    //     res += an[n-1]*cos(n*t) + bn[n-1]*sin(n*t);
-    // }
-
-    for (int i = 0; i < fft.size(); i++){
-        double angle = -2*i*M_PI*t/fft.size();
-        complex_num cn = fft[i] * (complex_num(1, 0)*cos(angle) + complex_num(1, 1)*sin(angle));
-        // res += cn*(complex_num(1, 0)*cos(angle) + complex_num(1, 1)*sin(angle));
-        //res += fft[i]*polar(1.0, (i*2*M_PI*t)/fft.size());
-        // res += fft[i]*polar(1.0, -(i*2*M_PI*t));
-        double amp = (fft[i].imag()*fft[i].imag() + fft[i].real()*fft[i].real());
+    for (int i = 0; i < N; i++){
+        double amp = sqrt(fft[i].imag()*fft[i].imag() + fft[i].real()*fft[i].real());
         double freq = i;
         double phase = atan2(fft[i].imag(), fft[i].real());
-        res += complex_num(amp*cos(freq*t + phase + M_PI/2), amp*sin(freq*t + phase + M_PI/2));
-        // res += amp*polar(1.0, (i*2*M_PI*t/fft.size()));
-        //res += fft[i]*polar(1.0, -(i*2*M_PI*t));
-        //res += fft[i]*polar(1.0, -(i*2*M_PI*t));
+        res += complex_num(amp*cos(freq*t + phase + rotation), amp*sin(freq*t + phase + rotation));
     }
-    cout << "resultttttttttttttttttt" << res << endl;
     return res;
 }
 
@@ -136,6 +112,10 @@ int main() {
     // Store generated points for drawing
     sf::VertexArray curve(sf::LineStrip);
     
+    int WIDTH = 800;
+    int HEIGHT = 600;
+    float PI = 3.14159265358979323846f;
+
     for (int c = 0; c < 1; c++){
         auto contour = contours[c];
         // vector<complex_num> contour_complex = contour_to_complex_vector(contour);
@@ -156,12 +136,14 @@ int main() {
         // Calculate fourier coefficients
         // vector<complex_num> fft = GeneralFFT_Parallel(contour_complex);
         // Generate points
-        for (float t = 0; t <= 2*M_PI; t += 2*M_PI/fft.size()) {
-            // double x = parametric(t, fft_x);
-            // double y = parametric(t, fft_y);
-            complex_num pnt = parametric(t, fft);
-            float x = pnt.real()/20000000;  // Scale x
-            float y = pnt.imag()/20000000;  // Scale y
+        for (float t = 0; t < 2*M_PI; t += 2*M_PI/fft_x.size()) {
+            double x = parametric(complex_num(WIDTH/2.0 + 100, 100), 0, t, fft_x).real();
+            double y = parametric(complex_num(100.0, HEIGHT/2.0+100), M_PI/2, t, fft_y).imag();
+            x = x/300;
+            y = y/300;
+            //complex_num pnt = parametric(t, fft);
+            //float x = pnt.real()/20000000;  // Scale x
+            //float y = pnt.imag()/20000000;  // Scale y
             std::cout << x << "  " << y << std::endl;
             curve.append(sf::Vertex(sf::Vector2f(x, y), sf::Color::Red));
         }
@@ -185,10 +167,6 @@ int main() {
     // Display the result
     // imshow("Original Image", image);
     // imshow("Contours", contourOutput);
-
-    int WIDTH = 800;
-    int HEIGHT = 600;
-    float PI = 3.14159265358979323846f;
 
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Parametric Curve");
 

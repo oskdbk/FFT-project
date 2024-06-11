@@ -1,11 +1,10 @@
 # Application
 
+<div align="center">
 ## Image of PI
 Number of contours: 3, Number of points: 581
 #### Initial image
-<div align="center">
 <img src="drawing/pictures/pi_try.png" alt="PI" style="height:200px;">
-<\div>
 
 #### Result image
 
@@ -38,3 +37,5 @@ Without connecting lines
 With connecting lines
 
 <img src="drawing/results/gojo_result_np.png" alt="Gojo result" style="height:200px;">
+
+</div>

@@ -6,7 +6,6 @@ Number of contours: 3, Number of points: 581
 <img src="drawing/pictures/pi_try.png" alt="PI" style="height:200px;">
 
 #### Result image
-With connecting lines
 
 <img src="drawing/results/pi_result.png" alt="PI result" style="height:200px;">
 

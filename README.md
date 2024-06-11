@@ -1,6 +1,7 @@
 # Application
 
 <div align="center">
+  
 ## Image of PI
 Number of contours: 3, Number of points: 581
 #### Initial image

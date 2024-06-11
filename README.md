@@ -24,8 +24,6 @@ With connecting lines
 
 <img src="drawing/results/psyduck_result_np.png" alt="Psyduck result" style="height:200px;">
 
-Can I put them next to each other and center? MD code
-
 ## Image of Gojo
 Number of contours: 123, Number of points: 2844
 #### Initial image

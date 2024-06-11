@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
         row.push_back(measure_time(GeneralFFT, iters, P, false));
         if (i == 0)
             names.push_back("Sequential");
-        row.push_back(measure_time(GeneralFFT_inplace, iters, P, false));
+        row.push_back(measure_time(GeneralFFT_inplace, iters, P, false, false));
         if (i == 0)
             names.push_back("Inplace");
         for (int j = 0; j < threads.size(); j++){

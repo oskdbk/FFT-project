@@ -64,9 +64,6 @@ vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f, bool inv){
     }
     int p, q;
     std::tie(p, q) = Decompose(n);
-    if(f == true){
-        PRT1(P, " <- 0th step");
-    }
     
     if(p == 1){
         return StandardFFT(P, inv);
@@ -75,10 +72,6 @@ vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f, bool inv){
     //1 step: transpose
     vector<complex_num> A(n);
     A=TransposeFFT_inplace(P, p, q);
-    
-    if(f == true){
-        PRT1(A, " <- 1th step");
-    }
 
     //2 step: FFT column-wise (after transpose row-wise)
     vector<complex_num> B;
@@ -93,9 +86,6 @@ vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f, bool inv){
         first += p;
         last += p;
     }
-    if(f == true){
-        PRT1(B, " <- 2th step");
-    }
 
 
     A.clear();
@@ -103,10 +93,6 @@ vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f, bool inv){
         //3 step: Twiddle factors
         TwistFFT_inplace(B, q, p);
         
-        if(f == true){
-            PRT1(B, " <- 3th step");
-        }
-
         //4 step: General transpose
         A = TransposeFFT_inplace(B, q, p);
 
@@ -118,12 +104,8 @@ vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f, bool inv){
 
         B.clear();
 
-        if(f == true){
-            PRT1(A, " <- 4th step");
-        }
-
         //3 step: Twiddle factors
-        TwistFFT_inplace(B, q, p, true);
+        TwistFFT_inplace(A, p, q, true);
     }
     
 
@@ -142,17 +124,8 @@ vector<complex_num> GeneralFFT_inplace(vector<complex_num> P, bool f, bool inv){
     }
 
     A.clear();
-
-    if(f == true){
-        PRT1(B, " <- 5th step");
-    }
-    
     A = TransposeFFT_inplace(B, p, q);
 
-    if(f == true){
-        PRT1(A, " <- 6th step");
-    }
-    
     return A;
 }
 

@@ -1,6 +1,7 @@
 #include "utils.h"  // Include the header file containing measure_time
 #include "gfft.h"    // Include the header file or declare the GeneralFFT function
 #include "gfft_inplace.h"
+#include "gfft_parallel.h"
 
 // Sample data
 std::vector<complex_num> sample_data = {
@@ -16,27 +17,15 @@ int main() {
     // double time_taken = measure_time(GeneralFFT, iterations, sample_data, false);
 
 
-    std::vector<complex_num> vec(15, complex_num(1.0, 0.0));
+    std::vector<complex_num> vec = sample_data;
 
-    std::vector<complex_num> vec_1 = GeneralFFT_inplace(vec);
+    std::vector<complex_num> vec_1 = GeneralFFT_inplace(vec, false);
     std::vector<complex_num> vec_2 = GeneralFFT_inplace(vec_1, false, true);
 
-    for(const auto& elem : vec) {
-        std::cout << elem << std::endl;
-    }
+    std::vector<complex_num> pvec_1 = GeneralFFT_Parallel(vec, 8, false);
+    std::vector<complex_num> pvec_2 = GeneralFFT_Parallel(pvec_1, 8, true);
 
-    std::cout << endl;
-
-    for(const auto& elem : vec_1) {
-        std::cout << elem << std::endl;
-    }
-
-    std::cout << endl;
-
-    for(const auto& elem : vec_2) {
-        std::cout << elem << std::endl;
-    }
-
-    // Output the average time taken
+    PRT1(vec_2, "Normal Vector");
+    PRT1(pvec_2, "Parallel");
     return 0;
 }

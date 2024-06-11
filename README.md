@@ -5,8 +5,9 @@ You can compile the code for the non-parallel version by ```make drawing``` or j
 You can compile the code for the parallel version by ```make parallel``` and then run by ```./application_parallel``` from inside the ```drawing``` folder.
 
 Dependencies: code relies on OpenCV and SFML. You can get it from terminal on Linux (Ubuntu/Debian) by:
-`sudo apt install libopencv-dev`
-`sudo apt install libsfml-dev`
+
+```sudo apt install libopencv-dev
+sudo apt install libsfml-dev```
 
 <div align="center">
   

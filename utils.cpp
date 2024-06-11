@@ -20,11 +20,50 @@ vector<complex_num> Read_CSV(string file_path){
     return column_data;
 }
 
+
+void Write_CSV(const std::vector<complex_num>& data, const std::string& file_path) {
+    std::ofstream file(file_path);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file");
+    }
+    for (const auto& num : data) {
+        // file << std::to_string(num.real()) << "," << std::to_string(num.imag()) << "\n";
+        file << std::to_string(num.real()) << "\n";
+    }
+    file.close();
+}
+
+void Write_CSV_Columns(const std::vector<std::vector<complex_num>>& data, const std::vector<std::string>& headers, const std::string& file_path) {
+    std::ofstream file(file_path);
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file");
+    }
+    
+    // Write headers
+    for (const auto& header : headers) {
+        file << header << ",";
+    }
+    file << "\n";
+    
+    // Write data
+    size_t num_columns = data.size();
+    size_t num_rows = data[0].size();
+    for (size_t i = 0; i < num_rows; ++i) {
+        for (size_t j = 0; j < num_columns; ++j) {
+            file << std::to_string(data[j][i].real()) << ",";
+        }
+        file << "\n";
+    }
+    
+    file.close();
+}
+
+
 void PRT1(std::vector<std::complex<double>> P, string a){
     cout<< a << ":" << endl;
     int p;
     p = P.size();
-    for(int i=0; i<p; i++){
+    for(int i=0; i<10; i++){
         cout<<P[i]<<"  ";
     }
     cout<<endl;
@@ -122,4 +161,26 @@ bool is_same_vector(vector<complex_num> A, vector<complex_num> B, string a, stri
     if (verbose)
         cout << a << " and " << b << " are the same" << endl;
     return true;
+}
+
+void keep_largest_n(std::vector<complex_num> &P, int n) {
+    std::vector<std::pair<double, int>> norms;
+    
+    for (int i = 0; i < P.size(); ++i) {
+        double norm = std::norm(P[i]); 
+        norms.emplace_back(norm, i);  
+    }
+    
+    std::sort(norms.begin(), norms.end(), std::greater<std::pair<double, int>>());
+    
+    std::vector<int> largest_indices;
+    for (int i = 0; i < std::min(n, (int)P.size()); ++i) {
+        largest_indices.push_back(norms[i].second);
+    }
+    
+    for (int i = 0; i < P.size(); ++i) {
+        if (find(largest_indices.begin(), largest_indices.end(), i) == largest_indices.end()) {
+            P[i] = complex_num(0, 0); 
+        }
+    }
 }

@@ -1,5 +1,5 @@
 timer:
-	g++ general/gfft_parallel.cpp general/gfft.cpp general/gfft_inplace.cpp timer.cpp utils.cpp parallel_natali.cpp radix/FFT.cpp radix/radix_parallel.cpp -o timer
+	g++ general/gfft_parallel.cpp general/gfft.cpp general/gfft_inplace.cpp timer.cpp utils.cpp radix/FFT.cpp radix/radix_parallel.cpp -o timer
 
 run_parallel:
 	g++ general/gfft_parallel.cpp general/gfft.cpp general/gfft_inplace.cpp run_parallel.cpp utils.cpp -o run_parallel
@@ -19,4 +19,3 @@ all:
 	make test
 	make weather
 	make weather_2radix
-	

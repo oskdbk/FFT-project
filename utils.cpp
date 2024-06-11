@@ -9,7 +9,7 @@ vector<complex_num> Read_CSV(string file_path){
     if (!file.is_open()) {
         throw std::runtime_error("Could not open file");
     }
-    long double a = 0.0;
+    double a = 0.0;
     complex_num omega;
     while (std::getline(file, line)) {
         // Convert each line (string) to double and store in the vector
@@ -20,7 +20,7 @@ vector<complex_num> Read_CSV(string file_path){
     return column_data;
 }
 
-void PRT1(std::vector<std::complex<long double>> P, string a){
+void PRT1(std::vector<std::complex<double>> P, string a){
     cout<< a << ":" << endl;
     int p;
     p = P.size();
@@ -61,13 +61,13 @@ std::tuple<int, int> Decompose(int n){
 // for prime numbers, this primitive FFT, but can be changed to Rader's algorithm
 vector<complex_num> StandardFFT(vector<complex_num> &P){
     size_t n = P.size();
-    std::vector<std::complex<long double>> output(n, 0);
-    std::complex<long double> omega;
+    std::vector<std::complex<double>> output(n, 0);
+    std::complex<double> omega;
     for(int k = 0; k < n; k++){
         omega = {1.0, 0.0};
-        std::complex<long double> sum(0, 0);
-        long double angle = 2 * M_PI * k / n;
-        std::complex<long double> omega_l(std::cos(angle), -std::sin(angle));
+        std::complex<double> sum(0, 0);
+        double angle = 2 * M_PI * k / n;
+        std::complex<double> omega_l(std::cos(angle), -std::sin(angle));
         for(int l = 0; l < n; l++){
             sum += P[l] * omega;
             omega *= omega_l;

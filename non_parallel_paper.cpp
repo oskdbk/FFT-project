@@ -85,7 +85,7 @@ void printVector(const vector<complex_num>& vec) {
 }
 
 int main() {
-    // Test case 1: Simple case
+    // Test case 1:
     vector<complex_num> input1 = {1.0, 1.0, 1.0, 1.0};
     cout << endl << "Input 1: " << endl;
     vector<complex_num> output1 = DFT(input1);
@@ -94,7 +94,7 @@ int main() {
     vector<complex_num> output1ct = CooleyTukey(input1, 2, 2);
     printVector(output1ct);
 
-    // Test case 2: Another simple case
+    // Test case 2:
     vector<complex_num> input2 = {1.0, 2.0, 3.0, 4.0};
     cout << endl << "Input 2: " << endl;
     vector<complex_num> output2 = DFT(input2);
@@ -103,7 +103,7 @@ int main() {
     vector<complex_num> output2ct = CooleyTukey(input2, 2, 2);
     printVector(output2ct);
 
-    // Test case 3: Sinusoidal input
+    // Test case 3:
     vector<complex_num> input3 = {0.0, 1.0, 0.0, -1.0};
     cout << endl << "Input 3: " << endl;
     vector<complex_num> output3 = DFT(input3);
@@ -112,7 +112,7 @@ int main() {
     vector<complex_num> output3ct = CooleyTukey(input3, 2, 2);
     printVector(output3ct);
 
-    // Test case 4: FFT with Cooley-Tukey algorithm
+    // Test case 4:
     vector<complex_num> input4 = {1.0, 2.0, 3.0, 4.0};
     cout << endl << "Input 4: " << endl;
     vector<complex_num> output4 = DFT(input4);

@@ -87,10 +87,13 @@ int main() {
     vector<Vec4i> hierarchy;
     findContours(binary, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
+    cout << "Number of contours is " << contours.size() << endl;
+
     /*
     FFT
     */
-    sf::VertexArray curve(sf::LineStrip);
+    // sf::VertexArray curve(sf::LineStrip);
+    sf::VertexArray curve(sf::Points);
     
     int WIDTH = 800;
     int HEIGHT = 600;

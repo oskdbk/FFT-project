@@ -7,7 +7,7 @@
 #include "utils.h"
 
 using namespace std;
-typedef complex<long double> complex_num;
+typedef complex<double> complex_num;
 
 vector<complex_num> FFT(vector<complex_num> input);
 
@@ -20,7 +20,7 @@ void computeDFTColumn(vector<vector<complex_num>>& matrix, int index) {
 void computeTwiddle(vector<vector<complex_num>>& columns, vector<vector<complex_num>>& rows, int N1, int N2, int index) {
     int N = N1 * N2;
     for (int k2 = 0; k2 < N2; k2++) {
-        long double angle = 2.0 * M_PI * index * k2 / N;
+        double angle = 2.0 * M_PI * index * k2 / N;
         rows[k2][index] = complex_num(std::cos(angle), -std::sin(angle)) * columns[index][k2];
     }
 }

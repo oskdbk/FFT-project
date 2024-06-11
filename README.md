@@ -14,7 +14,8 @@ make parallel
 ./application_parallel
 ```
 
-Dependencies: code relies on OpenCV and SFML. You can get it from terminal on Linux (Ubuntu/Debian) by:
+#### Dependencies: 
+code relies on OpenCV and SFML. You can get it from terminal on Linux (Ubuntu/Debian) by:
 ```
 sudo apt install libopencv-dev
 sudo apt install libsfml-dev

@@ -17,13 +17,13 @@ Number of contours: 20, Number of points: 4825
 <img src="drawing/pictures/example.png" alt="Psyduck" style="height:200px;">
 
 #### Result image
-Without connecting lines
-
-<img src="drawing/results/psyduck.png" alt="Psyduck result" style="height:200px;">
-
 With connecting lines
 
 <img src="drawing/results/psyduck_result_np.png" alt="Psyduck result" style="height:200px;">
+
+Without connecting lines
+
+<img src="drawing/results/psyduck.png" alt="Psyduck result" style="height:200px;">
 
 ## Image of Gojo
 Number of contours: 123, Number of points: 2844
@@ -31,12 +31,12 @@ Number of contours: 123, Number of points: 2844
 <img src="drawing/pictures/gojo.png" alt="Gojo" style="height:200px;">
 
 #### Result image
-Without connecting lines
-
-<img src="drawing/results/gojo_result.png" alt="Gojo result" style="height:200px;">
-
 With connecting lines
 
 <img src="drawing/results/gojo_result_np.png" alt="Gojo result" style="height:200px;">
 
+
+Without connecting lines
+
+<img src="drawing/results/gojo_result.png" alt="Gojo result" style="height:200px;">
 </div>

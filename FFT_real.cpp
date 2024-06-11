@@ -1,3 +1,5 @@
+// THIS FILE IS NOT NEEDED
+
 #include <iostream>
 #include <climits>
 #include <thread>
@@ -8,8 +10,8 @@
 #include <complex> // to use complex numbers
 #include <cmath>
 
-typedef long double num;
-typedef std::vector<long double>::const_iterator NumIter;
+typedef double num;
+typedef std::vector<double>::const_iterator NumIter;
 
 typedef std::complex<num> complex_num;
 

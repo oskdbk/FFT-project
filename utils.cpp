@@ -59,23 +59,31 @@ std::tuple<int, int> Decompose(int n){
 }
 
 // for prime numbers, this primitive FFT, but can be changed to Rader's algorithm
-vector<complex_num> StandardFFT(vector<complex_num> &P){
+vector<complex_num> StandardFFT(vector<complex_num> &P, bool inv){
+    double factor = -1.0;
+    double div = 1.0;
+    
     size_t n = P.size();
+    if(inv){
+        factor = 1.0;
+        div = static_cast<double>(n);
+    }
     std::vector<std::complex<double>> output(n, 0);
     std::complex<double> omega;
     for(int k = 0; k < n; k++){
         omega = {1.0, 0.0};
         std::complex<double> sum(0, 0);
         double angle = 2 * M_PI * k / n;
-        std::complex<double> omega_l(std::cos(angle), -std::sin(angle));
+        std::complex<double> omega_l(std::cos(angle), factor * std::sin(angle));
         for(int l = 0; l < n; l++){
             sum += P[l] * omega;
             omega *= omega_l;
         }
-        output[k] = sum;
+        output[k] = sum/div;
     }
     return output;
 }
+
 
 /*
 Basic DFT

@@ -71,7 +71,7 @@ complex_num parametric(complex_num init_res, double rotation, float t, vector<co
 
 int main() {
     // Load the image
-    Mat image = imread("pictures/pi_try.png");
+    Mat image = imread("pictures/gojo.png");
     if (image.empty()) {
         cout << "Could not open or find the image" << endl;
         return -1;
@@ -128,11 +128,12 @@ int main() {
         curve.append(sf::Vertex(sf::Vector2f(x, y), sf::Color::Red));
     }
 
+    // Rendering
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Parametric Curve");
 
     sf::View view = window.getView();
     view.setCenter(0.0f, 0.0f);
-    view.setSize(WIDTH, HEIGHT); // flip the y axis
+    view.setSize(WIDTH, HEIGHT);
     window.setView(view);
 
     while (window.isOpen()) {

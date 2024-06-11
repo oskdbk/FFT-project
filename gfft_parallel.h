@@ -8,6 +8,6 @@
 using complex_num = std::complex<double>;
 
 // Function declarations
-std::vector<complex_num> GeneralFFT_Parallel(std::vector<complex_num> P, int num_threads = 1);
+std::vector<complex_num> GeneralFFT_Parallel(std::vector<complex_num> P, int num_threads = 1, bool inverse = false);
 
 #endif // GFFT_PARALLEL_H

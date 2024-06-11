@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
         if (i == 0)
             names.push_back("Inplace");
         for (int j = 0; j < threads.size(); j++){
-            double a = measure_time(GeneralFFT_Parallel, iters, P, threads[j]);
+            double a = measure_time(GeneralFFT_Parallel, iters, P, threads[j], false);
             row.push_back(a);
             if (i == 0)
                 names.push_back("Parallel_" + to_string(threads[j]));

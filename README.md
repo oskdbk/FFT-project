@@ -3,33 +3,27 @@
 ## Image of PI
 Number of contours: 20.
 #### Initial image
-<img src="drawing/pictures/pi_try.png" alt="PI result" style="height:200px;">
-
-Initial image of PI from Google.
+<img src="drawing/pictures/pi_try.png" alt="PI" style="height:200px;">
 
 #### Result image
-![PI result](drawing/results/pi_result.png)
-
+<img src="drawing/results/pi_result.png" alt="PI result" style="height:200px;">
 With connecting lines.
 
 ## Image of Psyduck
 
 #### Initial image
-![PI result](drawing/pictures/example.png)
-
-Initial image of Psyduck from Google.
+<img src="drawing/pictures/example.png" alt="Psyduck" style="height:200px;">
 
 #### Result image
-![PI result](drawing/results/psyduck.png)
+<img src="drawing/results/psyduck.png" alt="Psyduck result" style="height:200px;">
 
 Without connecting lines.
 
 ## Image of Gojo
 #### Initial image
-![PI result](drawing/pictures/gojo.png)
+<img src="drawing/pictures/gojo.png" alt="Gojo" style="height:200px;">
 
-Initial image of Gojo from Google.
 #### Result image
-![PI result](drawing/results/gojo_result.png)
+<img src="drawing/results/gojo_result.png" alt="Gojo result" style="height:200px;">
 
 Without connecting lines.

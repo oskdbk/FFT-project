@@ -1,7 +1,7 @@
 # Application
 
 ## Image of PI
-Number of contours: 20, Number of points: 581
+Number of contours: 3, Number of points: 581
 #### Initial image
 <img src="drawing/pictures/pi_try.png" alt="PI" style="height:200px;">
 
@@ -10,7 +10,7 @@ Number of contours: 20, Number of points: 581
 With connecting lines.
 
 ## Image of Psyduck
-
+Number of contours: 20, Number of points: 4825
 #### Initial image
 <img src="drawing/pictures/example.png" alt="Psyduck" style="height:200px;">
 
@@ -20,6 +20,7 @@ With connecting lines.
 Without connecting lines.
 
 ## Image of Gojo
+Number of contours: 123, Number of points: 2844
 #### Initial image
 <img src="drawing/pictures/gojo.png" alt="Gojo" style="height:200px;">
 

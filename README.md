@@ -7,7 +7,7 @@ Number of contours: 3, Number of points: 581
 
 #### Result image
 <img src="drawing/results/pi_result.png" alt="PI result" style="height:200px;">
-With connecting lines.
+With connecting lines
 
 ## Image of Psyduck
 Number of contours: 20, Number of points: 4825
@@ -17,7 +17,11 @@ Number of contours: 20, Number of points: 4825
 #### Result image
 <img src="drawing/results/psyduck.png" alt="Psyduck result" style="height:200px;">
 
-Without connecting lines.
+Without connecting lines
+
+<img src="drawing/results/psyduck_result_np.png" alt="Psyduck result" style="height:200px;">
+
+With connecting lines
 
 ## Image of Gojo
 Number of contours: 123, Number of points: 2844
@@ -27,4 +31,8 @@ Number of contours: 123, Number of points: 2844
 #### Result image
 <img src="drawing/results/gojo_result.png" alt="Gojo result" style="height:200px;">
 
-Without connecting lines.
+Without connecting lines
+
+<img src="drawing/results/gojo_result_np.png" alt="Gojo result" style="height:200px;">
+
+With connecting lines

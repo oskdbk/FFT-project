@@ -3,7 +3,7 @@
 #include <complex>
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "../gfft_parallel.h"
+#include "../general/gfft_parallel.h"
 
 using namespace cv;
 using namespace std;
@@ -69,9 +69,23 @@ complex_num parametric(complex_num init_res, double rotation, float t, vector<co
     return res;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    std::string filename;
+    bool usePoints = false;
+
+    // Parse command line arguments
+    if (argc < 2 || argc > 3) {
+        std::cerr << "Usage: " << argv[0] << " <filename> [-points]\n";
+        return 1;
+    } else {
+        filename = argv[1];
+        if (argc == 3 && std::string(argv[2]) == "-points") {
+            usePoints = true;
+        }
+    }
+
     // Load the image
-    Mat image = imread("pictures/gojo.png");
+    Mat image = imread("pictures/" + filename);
     if (image.empty()) {
         cout << "Could not open or find the image" << endl;
         return -1;
@@ -92,8 +106,14 @@ int main() {
     /*
     FFT
     */
-    // sf::VertexArray curve(sf::LineStrip);
-    sf::VertexArray curve(sf::Points);
+
+    sf::VertexArray curve;
+
+    if (usePoints){
+        curve = sf::VertexArray(sf::Points);
+    } else {
+        curve = sf::VertexArray(sf::LineStrip);
+    }
     
     int WIDTH = 800;
     int HEIGHT = 600;

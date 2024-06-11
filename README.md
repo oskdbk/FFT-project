@@ -1,7 +1,7 @@
 # Application
 
 ## Image of PI
-Number of contours: 20.
+Number of contours: 20, Number of points: 581
 #### Initial image
 <img src="drawing/pictures/pi_try.png" alt="PI" style="height:200px;">
 

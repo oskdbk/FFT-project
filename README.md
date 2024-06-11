@@ -1,8 +1,18 @@
 # Application
 ## How to run
 You can compile the code for the non-parallel version by ```make drawing``` or just ```make``` and then run by ```./application``` from inside the ```drawing``` folder.
+```
+cd drawing
+make drawing
+./application
+```
 
 You can compile the code for the parallel version by ```make parallel``` and then run by ```./application_parallel``` from inside the ```drawing``` folder.
+```
+cd drawing
+make parallel
+./application_parallel
+```
 
 Dependencies: code relies on OpenCV and SFML. You can get it from terminal on Linux (Ubuntu/Debian) by:
 ```

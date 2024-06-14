@@ -167,15 +167,34 @@ void parallel_construct_vertices(const vector<complex_num>& points, double xmin,
 int main(int argc, char* argv[]) {
     std::string filename;
     bool usePoints = false;
+    int num_threads = 8; // Default number of threads
 
     // Parse command line arguments
-    if (argc < 2 || argc > 3) {
-        std::cerr << "Usage: " << argv[0] << " <filename> [-points]\n";
+    if (argc < 2 || argc > 5) {
+        std::cerr << "Usage: " << argv[0] << " <filename> [-points] [-n <num_threads>]\n";
         return 1;
     } else {
         filename = argv[1];
-        if (argc == 3 && std::string(argv[2]) == "-points") {
-            usePoints = true;
+        
+        for (int i = 2; i < argc; ++i) {
+            std::string arg = argv[i];
+            if (arg == "-points") {
+                usePoints = true;
+            } else if (arg == "-n") {
+                if (i + 1 < argc) {
+                    num_threads = std::atoi(argv[++i]);
+                    if (num_threads <= 0) {
+                        std::cerr << "Error: Number of threads must be a positive integer.\n";
+                        return 1;
+                    }
+                } else {
+                    std::cerr << "Error: Missing value for -n option.\n";
+                    return 1;
+                }
+            } else {
+                std::cerr << "Unknown argument: " << arg << "\n";
+                return 1;
+            }
         }
     }
 
@@ -205,10 +224,10 @@ int main(int argc, char* argv[]) {
 
     auto contour = combine_contours(contours);
     // Calculate Fourier transform
-    vector<complex_num> contour_complex_x = contour_to_complex_vector_x(contour);
-    vector<complex_num> contour_complex_y = contour_to_complex_vector_y(contour);
-    vector<complex_num> fft_x = GeneralFFT_Parallel(contour_complex_x);
-    vector<complex_num> fft_y = GeneralFFT_Parallel(contour_complex_y);
+    vector<complex_num> contour_complex_x = contour_to_complex_vector_x(contour, num_threads);
+    vector<complex_num> contour_complex_y = contour_to_complex_vector_y(contour, num_threads);
+    vector<complex_num> fft_x = GeneralFFT_Parallel(contour_complex_x, num_threads);
+    vector<complex_num> fft_y = GeneralFFT_Parallel(contour_complex_y, num_threads);
 
     // Generate points
     vector<complex_num> points;
@@ -217,8 +236,8 @@ int main(int argc, char* argv[]) {
     double ymin = INFINITY;
     double ymax = -INFINITY;
     for (float t = 0; t < 2*M_PI; t += 2*M_PI/fft_x.size()) {
-        double x = parametric(complex_num(WIDTH/2.0 + 100, 100), 0, t, fft_x).real();
-        double y = parametric(complex_num(100.0, HEIGHT/2.0+100), M_PI/2, t, fft_y).imag();
+        double x = parametric(complex_num(WIDTH/2.0 + 100, 100), 0, t, fft_x, num_threads).real();
+        double y = parametric(complex_num(100.0, HEIGHT/2.0+100), M_PI/2, t, fft_y, num_threads).imag();
         if (x < xmin) xmin = x;
         if (x > xmax) xmax = x;
         if (y < ymin) ymin = y;
@@ -236,7 +255,7 @@ int main(int argc, char* argv[]) {
     } else {
         curve = sf::VertexArray(sf::LineStrip, points.size());
     }
-    parallel_construct_vertices(points, xmin, ymin, scale, curve);
+    parallel_construct_vertices(points, xmin, ymin, scale, curve, num_threads);
 
     // Rendering
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Parametric Curve");

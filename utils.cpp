@@ -33,31 +33,6 @@ void Write_CSV(const std::vector<complex_num>& data, const std::string& file_pat
     file.close();
 }
 
-void Write_CSV_Columns(const std::vector<std::vector<complex_num>>& data, const std::vector<std::string>& headers, const std::string& file_path) {
-    std::ofstream file(file_path);
-    if (!file.is_open()) {
-        throw std::runtime_error("Could not open file");
-    }
-    
-    // Write headers
-    for (const auto& header : headers) {
-        file << header << ",";
-    }
-    file << "\n";
-    
-    // Write data
-    size_t num_columns = data.size();
-    size_t num_rows = data[0].size();
-    for (size_t i = 0; i < num_rows; ++i) {
-        for (size_t j = 0; j < num_columns; ++j) {
-            file << std::to_string(data[j][i].real()) << ",";
-        }
-        file << "\n";
-    }
-    
-    file.close();
-}
-
 
 void PRT1(std::vector<std::complex<double>> P, string a){
     cout<< a << ":" << endl;

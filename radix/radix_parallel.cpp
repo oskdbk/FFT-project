@@ -53,9 +53,12 @@ vector<complex_num> Radix2FFT_parallel(vector<complex_num> P, int num_threads, b
         return vector<complex_num>{P[0]};
     }
     // pad to power of 2
-    while(log2(P.size()) > (int) log2(P.size())){
-        P.push_back(complex_num(0.0,0.0));
+    int p = 1;
+    while (p < P.size()){
+        p *= 2;
     }
+    
+    P.insert(P.end(), p - n_orig, complex_num(0.0, 0.0));
     int n = P.size();
     
     vector<complex_num> P_star(n);

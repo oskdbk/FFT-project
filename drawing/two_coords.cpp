@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "../general/gfft_parallel.h"
+#include "../utils.h"
 
 using namespace cv;
 using namespace std;
@@ -71,11 +72,11 @@ complex_num parametric(complex_num init_res, double rotation, float t, vector<co
 int main(int argc, char* argv[]) {
     std::string filename;
     bool usePoints = false;
-    int num_threads = 1; // Default number of threads for FFT
+    int num_threads = 8; // Default number of threads
+    int top = 0; // Default value for -top
 
-    // Parse command line arguments
-    if (argc < 2 || argc > 5) {
-        std::cerr << "Usage: " << argv[0] << " <filename> [-points] [-n <num_threads>]\n";
+    if (argc < 2 || argc > 7) {
+        std::cerr << "Usage: " << argv[0] << " <filename> [-points] [-n <num_threads>] [-top <value>]\n";
         return 1;
     } else {
         filename = argv[1];
@@ -93,6 +94,17 @@ int main(int argc, char* argv[]) {
                     }
                 } else {
                     std::cerr << "Error: Missing value for -n option.\n";
+                    return 1;
+                }
+            } else if (arg == "-top") {
+                if (i + 1 < argc) {
+                    top = std::atoi(argv[++i]);
+                    if (top < 0) {
+                        std::cerr << "Error: Value for -top must be a non-negative integer.\n";
+                        return 1;
+                    }
+                } else {
+                    std::cerr << "Error: Missing value for -top option.\n";
                     return 1;
                 }
             } else {
@@ -137,7 +149,18 @@ int main(int argc, char* argv[]) {
     int HEIGHT = 600;
     float PI = 3.14159265358979323846f;
 
-    auto contour = combine_contours(contours);
+    auto contour_pre = combine_contours(contours);
+    // TO DO: add choosing longest contour
+
+    auto contour = contour_pre;
+    contour.clear();
+
+    // Change contour to something smaller
+    for (int i = 0; i < contour_pre.size(); i+=1){
+        auto point = contour_pre[i];
+        contour.push_back(point);
+    }
+
     cout << "Number of points is: " << contour.size() << endl;
     // Calculate Fourier transform
     vector<complex_num> contour_complex_x = contour_to_complex_vector_x(contour);
@@ -145,7 +168,13 @@ int main(int argc, char* argv[]) {
     vector<complex_num> fft_x = GeneralFFT_Parallel(contour_complex_x, num_threads);
     vector<complex_num> fft_y = GeneralFFT_Parallel(contour_complex_y, num_threads);
 
+    if (top > 0){
+        keep_largest_n(fft_x, top);
+        keep_largest_n(fft_y, top);
+    }
+
     // Generate points
+
     vector<complex_num> points;
     double xmin = INFINITY;
     double xmax = -INFINITY;
@@ -165,8 +194,8 @@ int main(int argc, char* argv[]) {
     double scale = std::min(scale_x, scale_y);
 
     for (size_t i = 0; i < points.size(); ++i) {
-        double x = (points[i].real() - xmin) * scale/4;
-        double y = (points[i].imag() - ymin) * scale/4;
+        double x = (points[i].real() - xmin) * scale/1.5 - 150;
+        double y = (points[i].imag() - ymin) * scale/1.5 - 150;
         curve.append(sf::Vertex(sf::Vector2f(x, y), sf::Color::Red));
     }
 

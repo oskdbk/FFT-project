@@ -5,7 +5,7 @@ Files with underscore parallel are more parallelized versions of other files. tw
 cd drawing
 make drawing
 ./drawing
-make combined [-points] [-n <num_threads>] [-top <value>]
+make combined
 ./combined <filename> [-points] [-n <num_threads>] [-top <value>]
 make combined_parallel
 ./combined_parallel <filename> [-points] [-n <num_threads>]

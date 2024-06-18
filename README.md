@@ -1,17 +1,18 @@
 # Application
 ## How to run
-You can compile the code for the non-parallel version by ```make drawing``` or just ```make``` and then run by ```./application``` from inside the ```drawing``` folder.
+Files with underscore parallel are more parallelized versions of other files. twocoords implements drawing with FFTs on X and Y separately, combined does it together. -top argument specifies filtering of FFT values (how many largest values to keep). Drawing lets you first draw an image and then constructs it using the circles drawing.
 ```
 cd drawing
 make drawing
-./application
-```
-
-You can compile the code for the parallel version by ```make parallel``` and then run by ```./application_parallel``` from inside the ```drawing``` folder.
-```
-cd drawing
-make parallel
-./application_parallel
+./drawing
+make combined [-points] [-n <num_threads>] [-top <value>]
+./combined <filename> [-points] [-n <num_threads>] [-top <value>]
+make combined_parallel
+./combined_parallel <filename> [-points] [-n <num_threads>]
+make twocoords
+./twocoords <filename> [-points] [-n <num_threads>] [-top <value>]
+make twocoords_parallel
+./twocoords_parallel <filename> [-points] [-n <num_threads>]
 ```
 
 #### Dependencies: 
